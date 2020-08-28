@@ -473,5 +473,15 @@ namespace NewRn.Data
             return dt;
         }
 
+        public DataTable getInventPeriod(DateTime dateStart,DateTime dateStop)
+        {
+            ap.Clear();
+            ap.Add(dateStart);
+            ap.Add(dateStop);
+            return sql.executeProcedure("CountRN.spg_getInventPeriod",
+                new string[2] { "@dateStart", "@dateStop" },
+                new DbType[2] { DbType.Date,DbType.Date }, ap);
+        }
+
     }
 }

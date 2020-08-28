@@ -108,7 +108,7 @@
             this.btSave = new System.Windows.Forms.Button();
             this.btCalc = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chbWithInvSpis = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdPrices)).BeginInit();
             this.cmPrint.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -749,42 +749,48 @@
             // btSave
             // 
             this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btSave.Enabled = false;
             this.btSave.Image = global::NewRn.Properties.Resources._006074_floppy_disk_ok;
             this.btSave.Location = new System.Drawing.Point(1229, 638);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(40, 40);
             this.btSave.TabIndex = 37;
             this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Visible = false;
             // 
             // btCalc
             // 
             this.btCalc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btCalc.Enabled = false;
             this.btCalc.Image = global::NewRn.Properties.Resources._11;
             this.btCalc.Location = new System.Drawing.Point(1183, 638);
             this.btCalc.Name = "btCalc";
             this.btCalc.Size = new System.Drawing.Size(40, 40);
             this.btCalc.TabIndex = 37;
             this.btCalc.UseVisualStyleBackColor = true;
+            this.btCalc.Visible = false;
             this.btCalc.Click += new System.EventHandler(this.btCalc_Click);
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.checkBox1);
+            this.groupBox6.Controls.Add(this.chbWithInvSpis);
             this.groupBox6.Location = new System.Drawing.Point(1081, 6);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(182, 35);
             this.groupBox6.TabIndex = 30;
             this.groupBox6.TabStop = false;
             // 
-            // checkBox1
+            // chbWithInvSpis
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(11, 11);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(165, 20);
-            this.checkBox1.TabIndex = 24;
-            this.checkBox1.Text = "с учётом инв. списания";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chbWithInvSpis.AutoSize = true;
+            this.chbWithInvSpis.Checked = true;
+            this.chbWithInvSpis.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbWithInvSpis.Location = new System.Drawing.Point(11, 11);
+            this.chbWithInvSpis.Name = "chbWithInvSpis";
+            this.chbWithInvSpis.Size = new System.Drawing.Size(165, 20);
+            this.chbWithInvSpis.TabIndex = 24;
+            this.chbWithInvSpis.Text = "с учётом инв. списания";
+            this.chbWithInvSpis.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -902,7 +908,7 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Button btCalc;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chbWithInvSpis;
     }
 }
 

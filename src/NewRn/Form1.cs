@@ -49,11 +49,8 @@ namespace NewRn
                 //доступ к данным на сервере                
                 sql = new Sql(ConnectionSettings.GetServer(), ConnectionSettings.GetUsername(), ConnectionSettings.GetPassword(), ConnectionSettings.GetDatabase(), ConnectionSettings.ProgramName);
                 sqlVVO = new Sql(ConnectionSettings.GetServer("2"), ConnectionSettings.GetUsername(), ConnectionSettings.GetPassword(), ConnectionSettings.GetDatabase("2"), ConnectionSettings.ProgramName);
-//                toolStripStatusLabelServer.Text = Dns.GetHostAddresses(ConnectionSettings.GetServer())[0].ToString() + "-" + ConnectionSettings.GetDatabase()
-//                    + "/" + Dns.GetHostAddresses(ConnectionSettings.GetServer("2"))[0].ToString() + "-" + ConnectionSettings.GetDatabase("2");
 
-                toolStripStatusLabelServer.Text = ConnectionSettings.GetServer() + "-" + ConnectionSettings.GetDatabase()
-    + "/" + ConnectionSettings.GetServer("2") + "-" + ConnectionSettings.GetDatabase("2");
+                toolStripStatusLabelServer.Text = ConnectionSettings.GetServer() + "-" + ConnectionSettings.GetDatabase() + "/" + ConnectionSettings.GetServer("2") + "-" + ConnectionSettings.GetDatabase("2");
 
                 //устанавливаем даты
 
@@ -178,6 +175,7 @@ namespace NewRn
         {
             if (!e.Cancelled)
             {
+                tmpDateStart = dtpStart.Value.Date; tmpDateStop = dtpFinish.Value.Date;
                 //
                 mult_count = false;
                 prihodAll_sum = 0;
@@ -312,6 +310,9 @@ namespace NewRn
                 {
                     cmbDepartments.Enabled = false;
                 }
+
+
+                isValidSave();
                 MessageBox.Show("Подсчёт РН завершён!");
                 GC.Collect();
                 cmbDepartments_SelectedIndexChanged(sender, e);
@@ -550,12 +551,14 @@ namespace NewRn
             try
             {
                 if (!e.Cancelled)
-                {                    
-                   // DataTable nnn = currentDepartment.Groups;
+                {
+                    tmpDateStart = dtpStart.Value.Date; tmpDateStop = dtpFinish.Value.Date;
+                    
+                    // DataTable nnn = currentDepartment.Groups;
                     /// nnn.Rows[3]["id"] = "34435";
                     ///grdPrices.DataSource = currentDepartment.Groups;   
                     //if(nnn.Rows.Count>0)                 
-                        grdPrices.DataSource = nnn;
+                    grdPrices.DataSource = nnn;
                    // else
                    //     grdPrices.DataSource = currentDepartment.Groups;   
                    // grdPrices.Columns["id"].CellTemplate.ValueType = typeof(string);
@@ -577,6 +580,7 @@ namespace NewRn
                     {
                         cmbDepartments.Enabled = false;
                     }
+                    isValidSave();
                     MessageBox.Show("Подсчёт РН завершён!");
                 }
                 else
@@ -902,12 +906,16 @@ namespace NewRn
             txtSumRemainFinish.Enabled = enabled;
             optCheckBox.Enabled = enabled;
             chkRemains.Enabled = enabled;
+            chbWithInvSpis.Enabled = enabled;
 
             SettingsButton.Enabled = enabled;
             cbShipped.Enabled = enabled;
 
             if (enabled)
                 cbShipped.Enabled = optCheckBox.Checked;
+
+            btCalc.Enabled = enabled;
+            btSave.Enabled = false;
         }
 
         #endregion
@@ -929,6 +937,8 @@ namespace NewRn
                 return Convert.ToInt32(cmbDepartments.SelectedValue) != -1;
             }
         }
+
+        private DateTime tmpDateStart, tmpDateStop;
 
         private void btnCount_Click(object sender, EventArgs e)
         {
@@ -962,6 +972,7 @@ namespace NewRn
                     }
                     else
                         countOneWorker.RunWorkerAsync(new object[] { cmbDepartments.SelectedValue, cmbDepartments.Text, dtpStart.Value, dtpFinish.Value, optCheckBox.Checked, cbShipped.Checked });
+
                     Logging.Comment("Отдел: " + cmbDepartments.Text+"(id:"+cmbDepartments.SelectedIndex+")");
                     Logging.Comment("Период с: " + dtpStart.Text + ", по: " + dtpFinish.Text);
                     Logging.Comment("Учитывать оптовые отгрузки:" + optCheckBox.Checked.ToString());
@@ -1447,6 +1458,22 @@ namespace NewRn
         {
             this.Text = ConnectionSettings.ProgramName + ", " + Nwuram.Framework.Settings.User.UserSettings.User.FullUsername;
             btCalc.Visible = btSave.Visible = new List<string>(new string[] { "БГЛ" }).Contains(UserSettings.User.StatusCode);
+        }
+
+        private void isValidSave()
+        {
+            btSave.Enabled = false;
+
+            if (tmpDateStart.Year == tmpDateStop.Year && tmpDateStart.Month == tmpDateStop.Month && !SelectOneDepartment)
+                btSave.Enabled = true;
+            else
+            {
+                DataTable dtResult = sql.getInventPeriod(tmpDateStart.Date, tmpDateStop.Date);
+                if (dtResult == null || dtResult.Rows.Count == 0) { btSave.Enabled = false; return; }
+                btSave.Enabled = (int)dtResult.Rows[0]["id"] == 1 && !SelectOneDepartment;
+                
+            }
+
         }
     }
 }

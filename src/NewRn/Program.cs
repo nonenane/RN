@@ -67,8 +67,8 @@ namespace NewRn
 
 
 
-            //Application.Run(new Form1());
-            Application.Run(new frmRnCompareTovar());
+            Application.Run(new Form1());
+            //Application.Run(new frmRnCompareTovar());
 
 
             Logging.StartFirstLevel(2);

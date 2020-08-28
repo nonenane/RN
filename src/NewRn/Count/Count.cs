@@ -112,10 +112,10 @@ namespace NewRn
         }
 
 
-        public static DataTable CountRN(DataTable goods, DataTable rems1, DataTable rems2,int id_otdel)
+        public static DataTable CountRN(DataTable goods, DataTable rems1, DataTable rems2, int id_otdel)
         {
             DataTable rn = new DataTable();
-//            rn.Columns.Add("id");
+            //            rn.Columns.Add("id");
             rn.Columns.Add(new DataColumn("id", typeof(string)));
             rn.Columns.Add("ean");
             rn.Columns.Add("cname");
@@ -189,10 +189,10 @@ namespace NewRn
             return rn;
         }
         //test3
-          public static DataTable CountRN_inv(DataTable goods, DataTable rems1, DataTable rems2,int id_otdel)
+        public static DataTable CountRN_inv(DataTable goods, DataTable rems1, DataTable rems2, int id_otdel)
         {
             DataTable rn = new DataTable();
-//            rn.Columns.Add("id");
+            //            rn.Columns.Add("id");
             rn.Columns.Add(new DataColumn("id", typeof(string)));
             rn.Columns.Add("ean");
             rn.Columns.Add("cname");
