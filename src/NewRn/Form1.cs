@@ -171,11 +171,19 @@ namespace NewRn
            Procent_sum_cout,
            R1_sum_cout,
            R2_sum_cout;
+
+        private bool isTUGrp, isOptCheckBox, isShipped, isWithInvSpis;
+
         private void countAllWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled)
             {
                 tmpDateStart = dtpStart.Value.Date; tmpDateStop = dtpFinish.Value.Date;
+                isTUGrp = rBGpr1.Checked;
+                isOptCheckBox = optCheckBox.Checked;
+                isShipped = cbShipped.Checked;
+                isWithInvSpis = chbWithInvSpis.Checked;
+
                 //
                 mult_count = false;
                 prihodAll_sum = 0;
@@ -945,6 +953,8 @@ namespace NewRn
             
             if (MessageBox.Show("Посчитать РН?", "РН", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+                Config.isInventSpis = chbWithInvSpis.Checked;
+
                 GC.Collect();
                 Logging.StartFirstLevel(485);
                 Logging.Comment("Расчет РН");
@@ -1320,6 +1330,95 @@ namespace NewRn
             new frmRNCompare() { dateStart = dtpStart.Value.Date,dateStop =  dtpFinish.Value.Date }.ShowDialog();
         }
 
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            if (store == null) { MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование",MessageBoxButtons.OK,MessageBoxIcon.Information); return; }
+
+            DateTime DateStart = tmpDateStart.Date;
+            DateTime DateEnd = tmpDateStop.Date;
+            
+            bool isOptOtgruz = isOptCheckBox;
+            bool isOnlyShipped = isShipped;
+            bool isInventorySpis = isWithInvSpis;
+
+            decimal TotalPrihod = store.PrihodAll;
+            decimal TotalRealiz = store.RealizAll;
+            decimal TotalRestStart = store.RemainStart;
+            decimal TotalRestStop = store.RemainFinish;
+            decimal TotalRN = store.RN;
+            decimal TotalPercentRN = store.Procent;
+
+            //Тут сохраняем заголовок
+
+            DataTable dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
+
+            if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
+            {
+                MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int id_TSaveRN = (int)dtResult.Rows[0]["id"];
+
+            foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
+            {
+                if ((Int16)row["id"] == -1) continue;
+
+                Department dep = store.GetDepartment((Int16)row["id"]);
+
+                foreach (DataRow rowGoods in dep.GetAllGoods().Rows)
+                {
+                    int id_tovar = int.Parse(rowGoods["id"].ToString());
+                    int id_grp1 = int.Parse(rowGoods["id_grp1"].ToString());
+                    int id_grp2 = int.Parse(rowGoods["id_grp2"].ToString());
+                    int id_otdel = (int)rowGoods["id_otdel"];
+                    decimal RestStart = decimal.Parse( rowGoods["r1"].ToString());
+                    decimal RestStop = decimal.Parse(rowGoods["r2"].ToString());
+
+                    decimal PrihodSum = decimal.Parse(rowGoods["prihod"].ToString());
+                    decimal OtgruzSum = decimal.Parse(rowGoods["otgruz"].ToString());
+                    decimal VozvrSum = decimal.Parse(rowGoods["vozvr"].ToString());
+                    decimal SpisSum = decimal.Parse(rowGoods["spis"].ToString());
+                    decimal InventSpisSum = decimal.Parse(rowGoods["spis_inv"].ToString());
+                    decimal RealizSum = decimal.Parse(rowGoods["realiz"].ToString());
+                    decimal OtgruzOptSum = decimal.Parse(rowGoods["realiz_opt"].ToString());
+                    decimal VozvrKassSum = decimal.Parse(rowGoods["vozvkass"].ToString());
+                    //Тут сохраняем тело
+
+                    if (id_otdel != 8)
+                        dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+
+                    decimal RestStartSum = 0;
+                    decimal RestStopSum = 0;
+                    decimal Prihod = 0;
+                    decimal Otgruz = 0;
+                    decimal Vozvr = 0;
+                    decimal Spis = 0;
+                    decimal VozvrKass = 0;
+                    decimal Realiz = 0;
+                    decimal InventSpis = 0;
+                    decimal OtgruzOpt = 0;
+
+                    if (dtResult != null && dtResult.Rows.Count > 0)
+                    {
+                        RestStartSum = (decimal)dtResult.Rows[0]["RestStartSum"];
+                        RestStopSum = (decimal)dtResult.Rows[0]["RestStopSum"];
+                        Prihod = (decimal)dtResult.Rows[0]["Prihod"];
+                        Otgruz = (decimal)dtResult.Rows[0]["Otgruz"];
+                        Vozvr = (decimal)dtResult.Rows[0]["Vozvr"];
+                        Spis = (decimal)dtResult.Rows[0]["Spis"];
+                        VozvrKass = (decimal)dtResult.Rows[0]["VozvrKass"];
+                        Realiz = (decimal)dtResult.Rows[0]["Realiz"];
+                        InventSpis = (decimal)dtResult.Rows[0]["InventSpis"];
+                        OtgruzOpt = (decimal)dtResult.Rows[0]["OtgruzOpt"];
+                    }
+
+                    dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum);
+
+                }
+            }
+        }
+
         private void chkRemains_CheckedChanged(object sender, EventArgs e)
         {
             r1.Visible = chkRemains.Checked;
@@ -1464,14 +1563,17 @@ namespace NewRn
         {
             btSave.Enabled = false;
 
-            if (tmpDateStart.Year == tmpDateStop.Year && tmpDateStart.Month == tmpDateStop.Month && !SelectOneDepartment)
+            if (tmpDateStart.Year == tmpDateStop.Year
+                && tmpDateStart.Month == tmpDateStop.Month
+                && tmpDateStart.Day == 1
+                && (new DateTime(tmpDateStop.Year, tmpDateStop.Month, 1)).AddMonths(1).AddDays(-1).Day == tmpDateStop.Day
+                && !SelectOneDepartment)
                 btSave.Enabled = true;
             else
             {
                 DataTable dtResult = sql.getInventPeriod(tmpDateStart.Date, tmpDateStop.Date);
                 if (dtResult == null || dtResult.Rows.Count == 0) { btSave.Enabled = false; return; }
                 btSave.Enabled = (int)dtResult.Rows[0]["id"] == 1 && !SelectOneDepartment;
-                
             }
 
         }

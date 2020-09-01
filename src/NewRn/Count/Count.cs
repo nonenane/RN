@@ -131,6 +131,7 @@ namespace NewRn
             rn.Columns.Add(new DataColumn("vozvkass", typeof(double)));
             rn.Columns.Add(new DataColumn("rn", typeof(double)));
             rn.Columns.Add("id_grp1");
+            rn.Columns.Add("id_grp2");
             rn.Columns.Add(new DataColumn("r1", typeof(double)));
             rn.Columns.Add(new DataColumn("r2", typeof(double)));
             rn.Columns.Add("id_otdel", typeof(int));
@@ -172,13 +173,14 @@ namespace NewRn
                 rnRow["otgruz"] = goodsRow["otgruz"];
                 rnRow["vozvr"] = goodsRow["vozvr"];
                 rnRow["spis"] = goodsRow["spis"];
-                rnRow["spis_inv"] = goodsRow["spis_inv"];
+                rnRow["spis_inv"] = Config.isInventSpis ? goodsRow["spis_inv"] : (decimal)0;
                 rnRow["realiz_all"] = realiz;
                 rnRow["realiz"] = goodsRow["realiz"];
                 rnRow["realiz_opt"] = goodsRow["realiz_opt"];
                 rnRow["vozvkass"] = goodsRow["vozvkass"];
                 rnRow["rn"] = RN;
                 rnRow["id_grp1"] = goodsRow["id_grp1"];
+                rnRow["id_grp2"] = goodsRow["id_grp2"];
 
                 rnRow["r1"] = remStart[0]["remains"];
                 rnRow["r2"] = remFinish[0]["remains"];
@@ -207,6 +209,7 @@ namespace NewRn
             rn.Columns.Add(new DataColumn("realiz_opt", typeof(double)));
             rn.Columns.Add(new DataColumn("vozvkass", typeof(double)));
             rn.Columns.Add(new DataColumn("rn", typeof(double)));
+            rn.Columns.Add("id_grp1");
             rn.Columns.Add("id_grp2");
             rn.Columns.Add(new DataColumn("r1", typeof(double)));
             rn.Columns.Add(new DataColumn("r2", typeof(double)));
@@ -233,12 +236,13 @@ namespace NewRn
                 rnRow["otgruz"] = goodsRow["otgruz"];
                 rnRow["vozvr"] = goodsRow["vozvr"];
                 rnRow["spis"] = goodsRow["spis"];
-                rnRow["spis_inv"] = goodsRow["spis_inv"];
+                rnRow["spis_inv"] = Config.isInventSpis ? goodsRow["spis_inv"] : (decimal)0;
                 rnRow["realiz_all"] = realiz;
                 rnRow["realiz"] = goodsRow["realiz"];
                 rnRow["realiz_opt"] = goodsRow["realiz_opt"];
                 rnRow["vozvkass"] = goodsRow["vozvkass"];
                 rnRow["rn"] = RN;
+                rnRow["id_grp1"] = goodsRow["id_grp1"];
                 rnRow["id_grp2"] = goodsRow["id_grp2"];
 
                 rnRow["r1"] = remStart[0]["remains"];

@@ -757,6 +757,7 @@
             this.btSave.TabIndex = 37;
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Visible = false;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // btCalc
             // 

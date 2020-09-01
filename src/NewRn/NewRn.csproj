@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Count\Count.cs" />
     <Compile Include="Count\Department.cs" />
     <Compile Include="Count\Group.cs" />

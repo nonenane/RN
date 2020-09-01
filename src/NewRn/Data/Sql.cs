@@ -483,5 +483,76 @@ namespace NewRn.Data
                 new DbType[2] { DbType.Date,DbType.Date }, ap);
         }
 
+        public DataTable getTovarDataToSaveRN(int id_tovar, DateTime dateStart, DateTime dateStop)
+        {
+            ap.Clear();
+            
+            ap.Add(id_tovar);
+            ap.Add(dateStart);
+            ap.Add(dateStop);
+            return sql.executeProcedure("CountRN.spg_getTovarDataToSaveRN",
+                new string[3] {"@id_tovar", "@dateStart", "@dateStop" },
+                new DbType[3] { DbType.Int32, DbType.Date, DbType.Date }, ap);
+        }
+
+        public DataTable setTSaveRN(DateTime DateStart, DateTime DateEnd,bool isOptOtgruz,bool isOnlyShipped,bool isInventorySpis,decimal TotalPrihod, decimal TotalRealiz, decimal TotalRestStart, decimal TotalRestStop, decimal TotalRN, decimal TotalPercentRN)
+        {
+
+            ap.Clear();
+
+            ap.Add(DateStart);
+            ap.Add(DateEnd);
+            ap.Add(isOptOtgruz);
+            ap.Add(isOnlyShipped);
+            ap.Add(isInventorySpis);
+            ap.Add(TotalPrihod);
+            ap.Add(TotalRealiz);
+            ap.Add(TotalRestStart);
+            ap.Add(TotalRestStop);
+            ap.Add(TotalRN);
+            ap.Add(TotalPercentRN);
+
+            ap.Add(UserSettings.User.Id);
+
+            return sql.executeProcedure("CountRN.spg_setTSaveRN",
+               new string[12] { "@DateStart", "@DateEnd", "@isOptOtgruz", "@isOnlyShipped", "@isInventorySpis", "@TotalPrihod", "@TotalRealiz", "@TotalRestStart", "@TotalRestStop", "@TotalRN", "@TotalPercentRN", "@id_user" },
+               new DbType[12] { DbType.Date, DbType.Date, DbType.Boolean, DbType.Boolean, DbType.Boolean, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Int32 }, ap);
+        }
+
+        public DataTable setSaveRN(int id_tSaveRN,int  id_tovar,int  id_department,int  id_grp1,int  id_grp2, decimal RestStart, decimal RestStartSum, decimal RestStop, decimal RestStopSum, decimal Prihod, decimal PrihodSum, decimal Otgruz, decimal OtgruzSum, decimal Vozvr, decimal VozvrSum, decimal Spis, decimal SpisSum, decimal InventSpis, decimal InventSpisSum, decimal Realiz, decimal RealizSum, decimal OtgruzOpt, decimal OtgruzOptSum, decimal VozvrKass, decimal VozvrKassSum)
+        {
+
+            ap.Clear();
+
+            ap.Add(id_tSaveRN);
+            ap.Add(id_tovar);
+            ap.Add(id_department);
+            ap.Add(id_grp1);
+            ap.Add(id_grp2);
+            ap.Add(RestStart);
+            ap.Add(RestStartSum);
+            ap.Add(RestStop);
+            ap.Add(RestStopSum);
+            ap.Add(Prihod);
+            ap.Add(PrihodSum);
+            ap.Add(Otgruz);
+            ap.Add(OtgruzSum);
+            ap.Add(Vozvr); 
+            ap.Add(VozvrSum); 
+            ap.Add(Spis);
+            ap.Add(SpisSum);
+            ap.Add(InventSpis);
+            ap.Add(InventSpisSum); 
+            ap.Add(Realiz);
+            ap.Add(RealizSum);
+            ap.Add(OtgruzOpt);
+            ap.Add(OtgruzOptSum);
+            ap.Add(VozvrKass);
+            ap.Add(VozvrKassSum);
+
+            return sql.executeProcedure("CountRN.spg_setSaveRN",
+               new string[25] { "@id_tSaveRN", "@id_tovar", "@id_department", "@id_grp1", "@id_grp2", "@RestStart", "@RestStartSum", "@RestStop", "@RestStopSum", "@Prihod", "@PrihodSum", "@Otgruz", "@OtgruzSum", "@Vozvr", "@VozvrSum", "@Spis", "@SpisSum", "@InventSpis", "@InventSpisSum", "@Realiz", "@RealizSum", "@OtgruzOpt", "@OtgruzOptSum", "@VozvrKass", "@VozvrKassSum" },
+               new DbType[25] { DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal }, ap);
+        }
     }
 }

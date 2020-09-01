@@ -11,7 +11,7 @@ namespace NewRn
 {
     class Department
     {
-        
+
         #region Properties
 
         private int id = 0; //идентификатор отдела
@@ -27,7 +27,7 @@ namespace NewRn
         }
 
         private DataTable rn = null;
-        private Sql  sql = new Sql(ConnectionSettings.GetServer(), ConnectionSettings.GetUsername(),
+        private Sql sql = new Sql(ConnectionSettings.GetServer(), ConnectionSettings.GetUsername(),
                     ConnectionSettings.GetPassword(), ConnectionSettings.GetDatabase(), ConnectionSettings.ProgramName);
 
         public decimal RN
@@ -109,9 +109,9 @@ namespace NewRn
         {
             get
             {
-                
 
-                if (rn != null && rn.Rows.Count>0)
+
+                if (rn != null && rn.Rows.Count > 0)
                     return Convert.ToDecimal(rn.Compute("Sum(prihod_all)", ""));
                 else
                     return 0;
@@ -264,7 +264,7 @@ namespace NewRn
                         groupRow["id"] = group.Id;
                         groupRow["cname"] = group.Name;
 
-                        groupRow["prihod_all"] = Math.Round(GetValueForGroup(group.Id, "prihod_all"),2);
+                        groupRow["prihod_all"] = Math.Round(GetValueForGroup(group.Id, "prihod_all"), 2);
                         groupRow["prihod"] = Math.Round(GetValueForGroup(group.Id, "prihod"), 2);
                         groupRow["otgruz"] = Math.Round(GetValueForGroup(group.Id, "otgruz"), 2);
                         groupRow["vozvr"] = Math.Round(GetValueForGroup(group.Id, "vozvr"), 2);
@@ -274,13 +274,13 @@ namespace NewRn
                         groupRow["realiz"] = Math.Round(GetValueForGroup(group.Id, "realiz"), 2);
                         groupRow["realiz_opt"] = Math.Round(GetValueForGroup(group.Id, "realiz_opt"), 2);
                         groupRow["vozvkass"] = Math.Round(GetValueForGroup(group.Id, "vozvkass"), 2);
-                        groupRow["rn"] = Math.Round(GetValueForGroup(group.Id, "rn"),2);
+                        groupRow["rn"] = Math.Round(GetValueForGroup(group.Id, "rn"), 2);
 
                         groupRow["r1"] = Math.Round(GetValueForGroup(group.Id, "r1"), 2);
                         groupRow["r2"] = Math.Round(GetValueForGroup(group.Id, "r2"), 2);
-                        
+
                         if (GetValueForGroup(group.Id, "realiz_all") != 0)
-                            groupRow["procent"] = Math.Round(Convert.ToDecimal(GetValueForGroup(group.Id, "rn") * 100 / GetValueForGroup(group.Id, "realiz_all")),2);
+                            groupRow["procent"] = Math.Round(Convert.ToDecimal(GetValueForGroup(group.Id, "rn") * 100 / GetValueForGroup(group.Id, "realiz_all")), 2);
                         else
                             groupRow["procent"] = 0;
                         groupRow["id_otdel"] = this.id;
@@ -299,20 +299,20 @@ namespace NewRn
 
 
                         decimal prihod_all
-                        ,prihod
-                        ,otgruz
-                        ,vozvr
-                        ,spis
-                        ,spis_inv
-                        ,realiz_all
-                        ,realiz
-                        ,realiz_opt
-                        ,vozvkass
-                        ,rn
-                        ,r1
-                        ,r2
-                        ,procent;
-                       
+                        , prihod
+                        , otgruz
+                        , vozvr
+                        , spis
+                        , spis_inv
+                        , realiz_all
+                        , realiz
+                        , realiz_opt
+                        , vozvkass
+                        , rn
+                        , r1
+                        , r2
+                        , procent;
+
 
 
                         foreach (DataRow row in dtGroupDataTable.Rows)
@@ -320,20 +320,20 @@ namespace NewRn
                             nameotdel = "";
                             idotdel = "";
                             tmpstr = Convert.ToString(row["val"]);
-                            prihod_all=0;
-                            prihod=0;
-                            otgruz=0;
-                            vozvr=0;
-                            spis=0;
-                            spis_inv=0;
-                            realiz_all=0;
-                            realiz=0;
-                            realiz_opt=0;
-                            vozvkass=0;
-                            rn=0;
-                            r1=0;
-                            r2=0;
-                            procent=0;
+                            prihod_all = 0;
+                            prihod = 0;
+                            otgruz = 0;
+                            vozvr = 0;
+                            spis = 0;
+                            spis_inv = 0;
+                            realiz_all = 0;
+                            realiz = 0;
+                            realiz_opt = 0;
+                            vozvkass = 0;
+                            rn = 0;
+                            r1 = 0;
+                            r2 = 0;
+                            procent = 0;
 
 
                             string[] split = tmpstr.Split(new Char[] { ',', '\t', '\n' });
@@ -374,7 +374,7 @@ namespace NewRn
                             //otdelrow["id"] = Convert.ToInt16(split[0]);
                             otdelrow["cname"] = nameotdel;
                             otdelrow["id_otdel"] = this.id;
-                           // otdelrow["dep"] = Id;
+                            // otdelrow["dep"] = Id;
                             //otdelrow["gcn"] = idotdel;
                             // otdelrow["chk"] = true;
                             otdelrow["prihod_all"] = prihod_all;
@@ -584,7 +584,7 @@ namespace NewRn
 
             table.Columns.Add("r1", typeof(double));
             table.Columns.Add("r2", typeof(double));
-           // table.Columns.Add("id_otdel", typeof(int));
+            // table.Columns.Add("id_otdel", typeof(int));
 
             //table.Columns.Add("ean", typeof(string));
             //table.Columns.Add("cname", typeof(string));
@@ -628,7 +628,7 @@ namespace NewRn
                 goodRow["rn"] = groupRow["rn"];
                 goodRow["r1"] = groupRow["r1"];
                 goodRow["r2"] = groupRow["r2"];
-               // goodRow["id_otdel"] = groupRow["id_otdel"];
+                // goodRow["id_otdel"] = groupRow["id_otdel"];
                 goods.Rows.Add(goodRow);
             }
             return goods;
@@ -638,7 +638,7 @@ namespace NewRn
         {
             DataTable goods = MakeGoodsTable();
             DataRow[] group = rn.Select("id_grp2 = '" + id_group.ToString() + "'");
-           
+
             foreach (DataRow groupRow in group)
             {
                 goodRow = goods.NewRow();
@@ -661,6 +661,11 @@ namespace NewRn
                 goods.Rows.Add(goodRow);
             }
             return goods;
+        }
+
+        public DataTable GetAllGoods()
+        {
+            return rn;
         }
 
         #region Constructor
