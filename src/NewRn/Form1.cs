@@ -947,56 +947,72 @@ namespace NewRn
         }
 
         private DateTime tmpDateStart, tmpDateStop;
+        private bool isCompareData = false;
 
         private void btnCount_Click(object sender, EventArgs e)
         {
-            
-            if (MessageBox.Show("Посчитать РН?", "РН", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                Config.isInventSpis = chbWithInvSpis.Checked;
+            isCompareData = false;
+            DataTable dtResult = sql.validateTSaveRN(dtpStart.Value.Date, dtpFinish.Value.Date, optCheckBox.Checked, cbShipped.Checked, chbWithInvSpis.Checked);
 
-                GC.Collect();
-                Logging.StartFirstLevel(485);
-                Logging.Comment("Расчет РН");
-                try
-                { 
-                    SetControlsEnable(false);
-                    progress.Minimum = 0;
-                    progress.Value = 0;
-                    if (!SelectOneDepartment)
+            if (dtResult != null && dtResult.Rows.Count > 0)
+            {
+                MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные за выбранный для расчёта период.\nВыберите операцию:\n", "Расчёт РН", MyMessageBox.MessageBoxButtons.YesNoCancel, new List<string>(new string[] { "Произвести расчёт", "Расчёт со сравнением", "Отмена" }));
+
+                //msgBox.Size = new Size(msgBox.Size.Width + 200, msgBox.Size.Height+200);
+
+                DialogResult dlgResult = msgBox.ShowDialog();
+                if (dlgResult == DialogResult.Cancel) return;
+                if (dlgResult == DialogResult.No) isCompareData = true;
+            }
+            else
+            {
+                if (MessageBox.Show("Посчитать РН?", "РН", MessageBoxButtons.YesNo) == DialogResult.No) return;
+            }
+
+            Config.isInventSpis = chbWithInvSpis.Checked;
+
+            GC.Collect();
+            Logging.StartFirstLevel(485);
+            Logging.Comment("Расчет РН");
+            try
+            {
+                SetControlsEnable(false);
+                progress.Minimum = 0;
+                progress.Value = 0;
+                if (!SelectOneDepartment)
+                {
+                    DataTable departments = sql.getDepartments();
+                    if (departments != null)
                     {
-                        DataTable departments = sql.getDepartments();
-                        if (departments != null)
-                        {
-                            progress.Maximum = departments.Rows.Count - 1;
-                            progress.Step = 1;
-                            countAllWorker.RunWorkerAsync(new object[] { dtpStart.Value, dtpFinish.Value, optCheckBox.Checked, cbShipped.Checked });
-                        }
-                        else
-                        {
-                            MessageBox.Show("Соединение с сервером потеряно! Обратитесь в ОЭЭС!");
-                            SetControlsEnable(true);
-                            Logging.Comment("Соединение с сервером потеряно! Обратитесь в ОЭЭС!");
-                            Logging.StopFirstLevel();
-                        }
+                        progress.Maximum = departments.Rows.Count - 1;
+                        progress.Step = 1;
+                        countAllWorker.RunWorkerAsync(new object[] { dtpStart.Value, dtpFinish.Value, optCheckBox.Checked, cbShipped.Checked });
                     }
                     else
-                        countOneWorker.RunWorkerAsync(new object[] { cmbDepartments.SelectedValue, cmbDepartments.Text, dtpStart.Value, dtpFinish.Value, optCheckBox.Checked, cbShipped.Checked });
-
-                    Logging.Comment("Отдел: " + cmbDepartments.Text+"(id:"+cmbDepartments.SelectedIndex+")");
-                    Logging.Comment("Период с: " + dtpStart.Text + ", по: " + dtpFinish.Text);
-                    Logging.Comment("Учитывать оптовые отгрузки:" + optCheckBox.Checked.ToString());
-                    if (optCheckBox.Checked)
                     {
-                        Logging.Comment("только отгрузки:" + cbShipped.Checked.ToString());
+                        MessageBox.Show("Соединение с сервером потеряно! Обратитесь в ОЭЭС!");
+                        SetControlsEnable(true);
+                        Logging.Comment("Соединение с сервером потеряно! Обратитесь в ОЭЭС!");
+                        Logging.StopFirstLevel();
                     }
-                    Logging.Comment("Пользователь: "+UserSettings.User.Id);
                 }
-                catch (Exception ex)
+                else
+                    countOneWorker.RunWorkerAsync(new object[] { cmbDepartments.SelectedValue, cmbDepartments.Text, dtpStart.Value, dtpFinish.Value, optCheckBox.Checked, cbShipped.Checked });
+
+                Logging.Comment("Отдел: " + cmbDepartments.Text + "(id:" + cmbDepartments.SelectedIndex + ")");
+                Logging.Comment("Период с: " + dtpStart.Text + ", по: " + dtpFinish.Text);
+                Logging.Comment("Учитывать оптовые отгрузки:" + optCheckBox.Checked.ToString());
+                if (optCheckBox.Checked)
                 {
-                    Logging.Comment(ex.Message);
+                    Logging.Comment("только отгрузки:" + cbShipped.Checked.ToString());
                 }
+                Logging.Comment("Пользователь: " + UserSettings.User.Id);
             }
+            catch (Exception ex)
+            {
+                Logging.Comment(ex.Message);
+            }
+
         }
 
         #endregion
@@ -1334,6 +1350,7 @@ namespace NewRn
         {
             if (store == null) { MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование",MessageBoxButtons.OK,MessageBoxIcon.Information); return; }
 
+            DataTable dtResult;
             DateTime DateStart = tmpDateStart.Date;
             DateTime DateEnd = tmpDateStop.Date;
             
@@ -1350,7 +1367,7 @@ namespace NewRn
 
             //Тут сохраняем заголовок
 
-            DataTable dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
+            dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
 
             if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
             {
@@ -1359,6 +1376,18 @@ namespace NewRn
             }
 
             int id_TSaveRN = (int)dtResult.Rows[0]["id"];
+
+            dtResult = sql.validateTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis);
+
+            if (dtResult != null && dtResult.Rows.Count > 0)
+            {
+                MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные\nза расчитанный период.\nСохранить новый расчёт?\n", "Сохранение расчёта РН", MyMessageBox.MessageBoxButtons.YesNo, new List<string>(new string[] { "Да", "Нет" }));
+             
+                if (msgBox.ShowDialog() == DialogResult.No) return;
+
+                dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
+            }
+
 
             foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
             {
@@ -1413,9 +1442,10 @@ namespace NewRn
                         OtgruzOpt = (decimal)dtResult.Rows[0]["OtgruzOpt"];
                     }
 
-                    dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum);
+                    dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, false);
 
                 }
+                MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

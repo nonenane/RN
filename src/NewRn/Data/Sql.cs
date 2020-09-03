@@ -519,7 +519,23 @@ namespace NewRn.Data
                new DbType[12] { DbType.Date, DbType.Date, DbType.Boolean, DbType.Boolean, DbType.Boolean, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Int32 }, ap);
         }
 
-        public DataTable setSaveRN(int id_tSaveRN,int  id_tovar,int  id_department,int  id_grp1,int  id_grp2, decimal RestStart, decimal RestStartSum, decimal RestStop, decimal RestStopSum, decimal Prihod, decimal PrihodSum, decimal Otgruz, decimal OtgruzSum, decimal Vozvr, decimal VozvrSum, decimal Spis, decimal SpisSum, decimal InventSpis, decimal InventSpisSum, decimal Realiz, decimal RealizSum, decimal OtgruzOpt, decimal OtgruzOptSum, decimal VozvrKass, decimal VozvrKassSum)
+        public DataTable validateTSaveRN(DateTime DateStart, DateTime DateEnd, bool isOptOtgruz, bool isOnlyShipped, bool isInventorySpis)
+        {
+            ap.Clear();
+
+            ap.Add(DateStart);
+            ap.Add(DateEnd);
+            ap.Add(isOptOtgruz);
+            ap.Add(isOnlyShipped);
+            ap.Add(isInventorySpis);
+
+            return sql.executeProcedure("CountRN.spg_validateTSaveRN",
+               new string[5] { "@DateStart", "@DateEnd", "@isOptOtgruz", "@isOnlyShipped", "@isInventorySpis", },
+               new DbType[5] { DbType.Date, DbType.Date, DbType.Boolean, DbType.Boolean, DbType.Boolean }, ap);
+        }
+
+
+        public DataTable setSaveRN(int id_tSaveRN,int  id_tovar,int  id_department,int  id_grp1,int  id_grp2, decimal RestStart, decimal RestStartSum, decimal RestStop, decimal RestStopSum, decimal Prihod, decimal PrihodSum, decimal Otgruz, decimal OtgruzSum, decimal Vozvr, decimal VozvrSum, decimal Spis, decimal SpisSum, decimal InventSpis, decimal InventSpisSum, decimal Realiz, decimal RealizSum, decimal OtgruzOpt, decimal OtgruzOptSum, decimal VozvrKass, decimal VozvrKassSum,bool isDel)
         {
 
             ap.Clear();
@@ -549,10 +565,11 @@ namespace NewRn.Data
             ap.Add(OtgruzOptSum);
             ap.Add(VozvrKass);
             ap.Add(VozvrKassSum);
+            ap.Add(isDel);
 
             return sql.executeProcedure("CountRN.spg_setSaveRN",
-               new string[25] { "@id_tSaveRN", "@id_tovar", "@id_department", "@id_grp1", "@id_grp2", "@RestStart", "@RestStartSum", "@RestStop", "@RestStopSum", "@Prihod", "@PrihodSum", "@Otgruz", "@OtgruzSum", "@Vozvr", "@VozvrSum", "@Spis", "@SpisSum", "@InventSpis", "@InventSpisSum", "@Realiz", "@RealizSum", "@OtgruzOpt", "@OtgruzOptSum", "@VozvrKass", "@VozvrKassSum" },
-               new DbType[25] { DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal }, ap);
+               new string[26] { "@id_tSaveRN", "@id_tovar", "@id_department", "@id_grp1", "@id_grp2", "@RestStart", "@RestStartSum", "@RestStop", "@RestStopSum", "@Prihod", "@PrihodSum", "@Otgruz", "@OtgruzSum", "@Vozvr", "@VozvrSum", "@Spis", "@SpisSum", "@InventSpis", "@InventSpisSum", "@Realiz", "@RealizSum", "@OtgruzOpt", "@OtgruzOptSum", "@VozvrKass", "@VozvrKassSum", "@isDel" },
+               new DbType[26] { DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Boolean }, ap);
         }
     }
 }

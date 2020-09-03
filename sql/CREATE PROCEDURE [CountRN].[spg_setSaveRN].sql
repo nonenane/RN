@@ -7,7 +7,7 @@ GO
 -- Create date: 2020-08-28
 -- Description:	Сохранение тела РН 
 -- =============================================
-CREATE PROCEDURE [CountRN].[spg_setSaveRN]		 
+ALTER PROCEDURE [CountRN].[spg_setSaveRN]		 
 	@id_tSaveRN int,
 	@id_tovar int,
 	@id_department int,
@@ -33,58 +33,69 @@ CREATE PROCEDURE [CountRN].[spg_setSaveRN]
 	@OtgruzOptSum numeric(16,2),
 	@OtgruzOpt numeric(16,2),
 	@VozvrKassSum numeric(16,2),
-	@VozvrKass numeric(16,2)
+	@VozvrKass numeric(16,2),
+	@isDel bit
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 BEGIN TRY 
 		
-		IF EXISTS(select id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar)
+
+		IF @isDel = 1
 			BEGIN
-				DECLARE @id int
-					select @id = id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar
-
-
-				UPDATE 
-					CountRN.j_SaveRN 
-				SET 
-					id_tSaveRN = @id_tSaveRN,
-					id_tovar = @id_tovar,
-					id_department = @id_department,
-					id_grp1 = @id_grp1,
-					id_grp2 = @id_grp2,
-					RestStart = @RestStart,
-					RestStartSum = @RestStartSum,
-					RestStop = @RestStop,
-					RestStopSum = @RestStopSum,
-					PrihodSum = @PrihodSum,
-					Prihod	= @Prihod,
-					OtgruzSum = @OtgruzSum,
-					Otgruz = @Otgruz,
-					VozvrSum = @VozvrSum,
-					Vozvr = @Vozvr,
-					SpisSum = @SpisSum,
-					Spis = @Spis,
-					InventSpisSum = @InventSpisSum,
-					InventSpis = @InventSpis,
-					RealizSum = @RealizSum,
-					Realiz = @Realiz,
-					OtgruzOptSum = @OtgruzOptSum,
-					OtgruzOpt = @OtgruzOpt,
-					VozvrKassSum = @VozvrKassSum,
-					VozvrKass = VozvrKass
-				WHERE 					
-					id = @id
-
-				SELECT @id as id
+				DELETE FROM CountRN.j_SaveRN where id_tSaveRN = @id_tSaveRN
+				RETURN
 			END
 		ELSE
 			BEGIN
-				INSERT INTO CountRN.j_SaveRN (id_tSaveRN,id_tovar,id_department,id_grp1,id_grp2,RestStart,RestStartSum,RestStop,RestStopSum,Prihod,PrihodSum,Otgruz,OtgruzSum,Vozvr,VozvrSum,Spis,SpisSum,InventSpis,InventSpisSum,Realiz,RealizSum,OtgruzOpt,OtgruzOptSum,VozvrKass,VozvrKassSum)
-				VALUES (@id_tSaveRN,@id_tovar,@id_department,@id_grp1,@id_grp2,@RestStart,@RestStartSum,@RestStop,@RestStopSum,@Prihod,@PrihodSum,@Otgruz,@OtgruzSum,@Vozvr,@VozvrSum,@Spis,@SpisSum,@InventSpis,@InventSpisSum,@Realiz,@RealizSum,@OtgruzOpt,@OtgruzOptSum,@VozvrKass,@VozvrKassSum)				
+					IF EXISTS(select id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar)
+						BEGIN
+							DECLARE @id int
+								select @id = id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar
 
-				SELECT cast(SCOPE_IDENTITY() as int) as id
+
+							UPDATE 
+								CountRN.j_SaveRN 
+							SET 
+								id_tSaveRN = @id_tSaveRN,
+								id_tovar = @id_tovar,
+								id_department = @id_department,
+								id_grp1 = @id_grp1,
+								id_grp2 = @id_grp2,
+								RestStart = @RestStart,
+								RestStartSum = @RestStartSum,
+								RestStop = @RestStop,
+								RestStopSum = @RestStopSum,
+								PrihodSum = @PrihodSum,
+								Prihod	= @Prihod,
+								OtgruzSum = @OtgruzSum,
+								Otgruz = @Otgruz,
+								VozvrSum = @VozvrSum,
+								Vozvr = @Vozvr,
+								SpisSum = @SpisSum,
+								Spis = @Spis,
+								InventSpisSum = @InventSpisSum,
+								InventSpis = @InventSpis,
+								RealizSum = @RealizSum,
+								Realiz = @Realiz,
+								OtgruzOptSum = @OtgruzOptSum,
+								OtgruzOpt = @OtgruzOpt,
+								VozvrKassSum = @VozvrKassSum,
+								VozvrKass = VozvrKass
+							WHERE 					
+								id = @id
+
+							SELECT @id as id
+						END
+					ELSE
+						BEGIN
+							INSERT INTO CountRN.j_SaveRN (id_tSaveRN,id_tovar,id_department,id_grp1,id_grp2,RestStart,RestStartSum,RestStop,RestStopSum,Prihod,PrihodSum,Otgruz,OtgruzSum,Vozvr,VozvrSum,Spis,SpisSum,InventSpis,InventSpisSum,Realiz,RealizSum,OtgruzOpt,OtgruzOptSum,VozvrKass,VozvrKassSum)
+							VALUES (@id_tSaveRN,@id_tovar,@id_department,@id_grp1,@id_grp2,@RestStart,@RestStartSum,@RestStop,@RestStopSum,@Prihod,@PrihodSum,@Otgruz,@OtgruzSum,@Vozvr,@VozvrSum,@Spis,@SpisSum,@InventSpis,@InventSpisSum,@Realiz,@RealizSum,@OtgruzOpt,@OtgruzOptSum,@VozvrKass,@VozvrKassSum)				
+
+							SELECT cast(SCOPE_IDENTITY() as int) as id
+						END
+
 			END
 END TRY 
 BEGIN CATCH 
