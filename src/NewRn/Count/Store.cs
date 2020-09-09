@@ -29,6 +29,8 @@ namespace NewRn
             rn.Columns.Add("procent", typeof(double));
             rn.Columns.Add("r1", typeof(double));
             rn.Columns.Add("r2", typeof(double));
+            rn.Columns.Add("notValidate", typeof(bool));
+            
 
             //rn.Columns.Add("prihod_all", typeof(decimal));
             //rn.Columns.Add("prihod", typeof(decimal));
@@ -96,7 +98,7 @@ namespace NewRn
         public delegate void Callback();
         public event Callback Notify;
         private DataRow rnRow;
-        
+
         public DataTable CountRN(IDataWorker sql, IDataWorker sqlVVO, DateTime date_start, DateTime date_finish, bool withOptOtgruz, bool shipped)
         {
             DataTable rn = MakeRNTable();
@@ -107,13 +109,22 @@ namespace NewRn
             //Console.WriteLine(GC.GetTotalMemory(true).ToString());
             DataTable prihodFinish = new DataTable();// = sql.GetPrihod(date_finish.AddDays(1).AddSeconds(-1), date_finish.AddDays(1).AddSeconds(-1), -1);
             //GC.Collect();
-            Console.WriteLine(GC.GetTotalMemory(true).ToString());
+            //Console.WriteLine(GC.GetTotalMemory(true).ToString());
             DataTable prihodStartVVO = new DataTable();// = sqlVVO.GetPrihod(date_start.AddSeconds(-1), date_start.AddSeconds(0), -1);
             //GC.Collect();
             //Console.WriteLine(GC.GetTotalMemory(true).ToString());
             DataTable prihodFinishVVO = new DataTable();// = sqlVVO.GetPrihod(date_finish.AddDays(1).AddSeconds(-1), date_finish.AddDays(1).AddSeconds(-1), -1);
             //GC.Collect();
             //Console.WriteLine(GC.GetTotalMemory(true).ToString());
+
+            Config.dtDaveRN = null;
+
+
+            if (Config.isCompareData)
+            {
+                Config.dtDaveRN = sql.getSaveRN(Config.id_TSaveRN);
+            }
+
             prihod_all = 0;
             realiz_all = 0;
             rN = 0;
@@ -126,6 +137,7 @@ namespace NewRn
                     dep.CountRN(dep.Id, date_start, date_finish, prihodStart, prihodFinish, withOptOtgruz, shipped, sql);
                 else
                     dep.CountRN(dep.Id, date_start, date_finish, prihodStartVVO, prihodFinishVVO, withOptOtgruz, shipped, sqlVVO);
+
                 //проверка на isnull
                 rnRow = rn.NewRow();
                 rnRow["id"] = dep.Id;
@@ -144,6 +156,7 @@ namespace NewRn
                 rnRow["procent"] = dep.Procent;
                 rnRow["r1"] = dep.R1;
                 rnRow["r2"] = dep.R2;
+                rnRow["notValidate"] = dep.notValidate;
                 rn.Rows.Add(rnRow);
 
                 prihod_all += dep.PrihodAll;
@@ -210,6 +223,7 @@ namespace NewRn
                 rnRow["procent"] = dep.Procent;
                 rnRow["r1"] = dep.R1;
                 rnRow["r2"] = dep.R2;
+                rnRow["notValidate"] = dep.notValidate;
                 rn.Rows.Add(rnRow);
 
                 prihod_all += dep.PrihodAll;

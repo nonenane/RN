@@ -184,6 +184,17 @@ namespace NewRn
             }
         }
 
+        public bool notValidate
+        {
+            get
+            {
+                if (Config.isCompareData && rn != null && rn.Rows.Count > 0)
+                    return rn.Select("notValidate = 1").Count() > 0;
+                else
+                    return false;
+            }
+        }
+
         private DataTable MakeGroupsTable()
         {
             DataTable table = new DataTable();

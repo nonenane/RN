@@ -29,22 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle81 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle82 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle83 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle84 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle85 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle86 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle87 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle88 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle89 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle90 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle91 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle92 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle93 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle94 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle95 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle96 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -109,6 +109,7 @@
             this.btCalc = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.chbWithInvSpis = new System.Windows.Forms.CheckBox();
+            this.pLegend = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.grdPrices)).BeginInit();
             this.cmPrint.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -202,21 +203,26 @@
             this.grdPrices.ContextMenuStrip = this.cmPrint;
             this.grdPrices.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.grdPrices.Location = new System.Drawing.Point(16, 125);
+            this.grdPrices.MultiSelect = false;
             this.grdPrices.Name = "grdPrices";
+            this.grdPrices.ReadOnly = true;
             this.grdPrices.RowHeadersVisible = false;
             this.grdPrices.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.grdPrices.RowTemplate.Height = 24;
+            this.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdPrices.Size = new System.Drawing.Size(1254, 492);
             this.grdPrices.TabIndex = 10;
             this.grdPrices.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdPrices_CellContentClick);
             this.grdPrices.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdPrices_CellContentDoubleClick);
+            this.grdPrices.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdPrices_RowPostPaint);
+            this.grdPrices.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.grdPrices_RowPrePaint);
             // 
             // id
             // 
             this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.id.DataPropertyName = "id";
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.id.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle81.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.id.DefaultCellStyle = dataGridViewCellStyle81;
             this.id.HeaderText = "Номер";
             this.id.Name = "id";
             this.id.ReadOnly = true;
@@ -226,8 +232,8 @@
             // 
             this.cname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.cname.DataPropertyName = "cname";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.cname.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle82.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cname.DefaultCellStyle = dataGridViewCellStyle82;
             this.cname.HeaderText = "Наименование";
             this.cname.Name = "cname";
             this.cname.ReadOnly = true;
@@ -236,9 +242,9 @@
             // r1
             // 
             this.r1.DataPropertyName = "r1";
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.r1.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle83.Format = "N2";
+            dataGridViewCellStyle83.NullValue = null;
+            this.r1.DefaultCellStyle = dataGridViewCellStyle83;
             this.r1.HeaderText = "Остатки на начало";
             this.r1.Name = "r1";
             this.r1.ReadOnly = true;
@@ -246,9 +252,9 @@
             // r2
             // 
             this.r2.DataPropertyName = "r2";
-            dataGridViewCellStyle4.Format = "N2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.r2.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle84.Format = "N2";
+            dataGridViewCellStyle84.NullValue = null;
+            this.r2.DefaultCellStyle = dataGridViewCellStyle84;
             this.r2.HeaderText = "Остатки на конец";
             this.r2.Name = "r2";
             this.r2.ReadOnly = true;
@@ -257,10 +263,10 @@
             // 
             this.prihod.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.prihod.DataPropertyName = "prihod";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.prihod.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle85.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle85.Format = "N2";
+            dataGridViewCellStyle85.NullValue = null;
+            this.prihod.DefaultCellStyle = dataGridViewCellStyle85;
             this.prihod.HeaderText = "Приход";
             this.prihod.Name = "prihod";
             this.prihod.ReadOnly = true;
@@ -270,10 +276,10 @@
             // 
             this.otgruz.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.otgruz.DataPropertyName = "otgruz";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N2";
-            dataGridViewCellStyle6.NullValue = null;
-            this.otgruz.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle86.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle86.Format = "N2";
+            dataGridViewCellStyle86.NullValue = null;
+            this.otgruz.DefaultCellStyle = dataGridViewCellStyle86;
             this.otgruz.HeaderText = "Отгрузка";
             this.otgruz.Name = "otgruz";
             this.otgruz.ReadOnly = true;
@@ -283,9 +289,9 @@
             // 
             this.vozvr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.vozvr.DataPropertyName = "vozvr";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N2";
-            this.vozvr.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle87.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle87.Format = "N2";
+            this.vozvr.DefaultCellStyle = dataGridViewCellStyle87;
             this.vozvr.HeaderText = "Возврат";
             this.vozvr.Name = "vozvr";
             this.vozvr.ReadOnly = true;
@@ -295,9 +301,9 @@
             // 
             this.spis.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.spis.DataPropertyName = "spis";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N2";
-            this.spis.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle88.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle88.Format = "N2";
+            this.spis.DefaultCellStyle = dataGridViewCellStyle88;
             this.spis.HeaderText = "Списание";
             this.spis.Name = "spis";
             this.spis.ReadOnly = true;
@@ -306,9 +312,9 @@
             // inv_spis
             // 
             this.inv_spis.DataPropertyName = "spis_inv";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Format = "N2";
-            this.inv_spis.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle89.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle89.Format = "N2";
+            this.inv_spis.DefaultCellStyle = dataGridViewCellStyle89;
             this.inv_spis.HeaderText = "Списание Инв.";
             this.inv_spis.Name = "inv_spis";
             this.inv_spis.ReadOnly = true;
@@ -317,10 +323,10 @@
             // 
             this.prihod_all.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.prihod_all.DataPropertyName = "prihod_all";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle10.Format = "N2";
-            this.prihod_all.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle90.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle90.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle90.Format = "N2";
+            this.prihod_all.DefaultCellStyle = dataGridViewCellStyle90;
             this.prihod_all.HeaderText = "Общ. приход";
             this.prihod_all.Name = "prihod_all";
             this.prihod_all.ReadOnly = true;
@@ -329,10 +335,10 @@
             // 
             this.realiz.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.realiz.DataPropertyName = "realiz";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.Format = "N2";
-            dataGridViewCellStyle11.NullValue = null;
-            this.realiz.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle91.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle91.Format = "N2";
+            dataGridViewCellStyle91.NullValue = null;
+            this.realiz.DefaultCellStyle = dataGridViewCellStyle91;
             this.realiz.HeaderText = "Реализация";
             this.realiz.Name = "realiz";
             this.realiz.ReadOnly = true;
@@ -342,9 +348,9 @@
             // 
             this.realiz_opt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.realiz_opt.DataPropertyName = "realiz_opt";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Format = "N2";
-            this.realiz_opt.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle92.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle92.Format = "N2";
+            this.realiz_opt.DefaultCellStyle = dataGridViewCellStyle92;
             this.realiz_opt.HeaderText = "Опт. отгрузки";
             this.realiz_opt.Name = "realiz_opt";
             this.realiz_opt.ReadOnly = true;
@@ -353,9 +359,9 @@
             // 
             this.vozvkass.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.vozvkass.DataPropertyName = "vozvkass";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle13.Format = "N2";
-            this.vozvkass.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle93.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle93.Format = "N2";
+            this.vozvkass.DefaultCellStyle = dataGridViewCellStyle93;
             this.vozvkass.HeaderText = "Возвраты с касс";
             this.vozvkass.Name = "vozvkass";
             this.vozvkass.ReadOnly = true;
@@ -364,10 +370,10 @@
             // 
             this.realiz_all.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.realiz_all.DataPropertyName = "realiz_all";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle14.Format = "N2";
-            this.realiz_all.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle94.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle94.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle94.Format = "N2";
+            this.realiz_all.DefaultCellStyle = dataGridViewCellStyle94;
             this.realiz_all.HeaderText = "Общ. реализация";
             this.realiz_all.Name = "realiz_all";
             this.realiz_all.ReadOnly = true;
@@ -376,11 +382,11 @@
             // 
             this.rn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.rn.DataPropertyName = "rn";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle15.Format = "N2";
-            dataGridViewCellStyle15.NullValue = null;
-            this.rn.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle95.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle95.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle95.Format = "N2";
+            dataGridViewCellStyle95.NullValue = null;
+            this.rn.DefaultCellStyle = dataGridViewCellStyle95;
             this.rn.HeaderText = "РН";
             this.rn.Name = "rn";
             this.rn.ReadOnly = true;
@@ -390,11 +396,11 @@
             // 
             this.proc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.proc.DataPropertyName = "procent";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle16.Format = "N2";
-            dataGridViewCellStyle16.NullValue = null;
-            this.proc.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle96.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle96.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle96.Format = "N2";
+            dataGridViewCellStyle96.NullValue = null;
+            this.proc.DefaultCellStyle = dataGridViewCellStyle96;
             this.proc.HeaderText = "Процент";
             this.proc.Name = "proc";
             this.proc.ReadOnly = true;
@@ -793,10 +799,21 @@
             this.chbWithInvSpis.Text = "с учётом инв. списания";
             this.chbWithInvSpis.UseVisualStyleBackColor = true;
             // 
+            // pLegend
+            // 
+            this.pLegend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pLegend.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(178)))), ((int)(((byte)(255)))));
+            this.pLegend.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pLegend.Location = new System.Drawing.Point(193, 645);
+            this.pLegend.Name = "pLegend";
+            this.pLegend.Size = new System.Drawing.Size(29, 33);
+            this.pLegend.TabIndex = 38;
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1282, 720);
+            this.Controls.Add(this.pLegend);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.btCalc);
             this.Controls.Add(this.btSave);
@@ -910,6 +927,7 @@
         private System.Windows.Forms.Button btCalc;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.CheckBox chbWithInvSpis;
+        private System.Windows.Forms.Panel pLegend;
     }
 }
 

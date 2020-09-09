@@ -22,5 +22,7 @@ namespace NewRn
         ArrayList GetDepartments();
         DataTable getGroupGroup(int id_dep);
         decimal GetProcurementPrice(int id_tovar, DateTime date);
+
+        DataTable getSaveRN(int id_tSaveRN);
     }
 }

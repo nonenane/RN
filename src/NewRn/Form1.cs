@@ -230,6 +230,7 @@ namespace NewRn
                         decimal procent_count = 0;
                         decimal r1_count = 0;
                         decimal r2_count = 0;
+                        bool notValidate = false;
                         listID[numkol] = Convert.ToInt32(split[0]);
                         foreach (string s in split)
                         {
@@ -240,7 +241,7 @@ namespace NewRn
                                 {
                                     if (countResult_tmp.Rows[i]["id"].ToString() == s)
                                     {
-                                        Console.WriteLine(countResult_tmp.Rows[i]["id"]);
+                                        //Console.WriteLine(countResult_tmp.Rows[i]["id"]);
                                         nameotdel += countResult_tmp.Rows[i]["cName"].ToString() + "/";
                                         idotdel += countResult_tmp.Rows[i]["id"].ToString() + "/";
                                         //
@@ -258,7 +259,7 @@ namespace NewRn
                                         procent_count += Convert.ToDecimal(countResult_tmp.Rows[i]["procent"]);
                                         r1_count += Convert.ToDecimal(countResult_tmp.Rows[i]["r1"]);
                                         r2_count += Convert.ToDecimal(countResult_tmp.Rows[i]["r2"]);
-
+                                        if ((bool)countResult_tmp.Rows[i]["notValidate"]) notValidate = true;
 
                                         //
                                         countResult_tmp.Rows[i].Delete();
@@ -293,6 +294,7 @@ namespace NewRn
                         firstRow["procent"] = procent_count;
                         firstRow["r1"] = r1_count;
                         firstRow["r2"] = r2_count;
+                        firstRow["notValidate"] = notValidate;
 
                         countResult.Rows.InsertAt(firstRow, Convert.ToInt32(split[0]) - 1);
                         countResult_tmp.AcceptChanges();
@@ -947,11 +949,12 @@ namespace NewRn
         }
 
         private DateTime tmpDateStart, tmpDateStop;
-        private bool isCompareData = false;
+      
 
         private void btnCount_Click(object sender, EventArgs e)
         {
-            isCompareData = false;
+            Config.isCompareData = false;
+            Config.id_TSaveRN = 0;
             DataTable dtResult = sql.validateTSaveRN(dtpStart.Value.Date, dtpFinish.Value.Date, optCheckBox.Checked, cbShipped.Checked, chbWithInvSpis.Checked);
 
             if (dtResult != null && dtResult.Rows.Count > 0)
@@ -962,7 +965,11 @@ namespace NewRn
 
                 DialogResult dlgResult = msgBox.ShowDialog();
                 if (dlgResult == DialogResult.Cancel) return;
-                if (dlgResult == DialogResult.No) isCompareData = true;
+                if (dlgResult == DialogResult.No)
+                {
+                    Config.isCompareData = true;
+                    Config.id_TSaveRN = (int)dtResult.Rows[0]["id"];
+                }
             }
             else
             {
@@ -1327,6 +1334,47 @@ namespace NewRn
             }
         }
 
+        private void grdPrices_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (e.RowIndex != -1 && countResult != null && grdPrices.DataSource!=null && (grdPrices.DataSource as DataTable).DefaultView.Count != 0)
+            {
+
+                Color rColor = Color.White;
+                if (Config.isCompareData && (grdPrices.DataSource as DataTable).Columns.Contains("notValidate") && (bool)(grdPrices.DataSource as DataTable).DefaultView[e.RowIndex]["notValidate"])
+                    rColor = pLegend.BackColor;
+
+                grdPrices.Rows[e.RowIndex].DefaultCellStyle.BackColor = rColor;
+                grdPrices.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = rColor;
+
+                grdPrices.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.Black;
+
+
+                grdPrices.Rows[e.RowIndex].Cells[id.Index].Style.BackColor =
+                         grdPrices.Rows[e.RowIndex].Cells[id.Index].Style.SelectionBackColor = Color.FromArgb(224, 224, 224);
+
+                grdPrices.Rows[e.RowIndex].Cells[cname.Index].Style.BackColor =
+                         grdPrices.Rows[e.RowIndex].Cells[cname.Index].Style.SelectionBackColor = Color.FromArgb(224, 224, 224);
+            }
+        }
+
+        private void grdPrices_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            //Рисуем рамку для выделеной строки
+            if (dgv.Rows[e.RowIndex].Selected)
+            {
+                int width = dgv.Width;
+                Rectangle r = dgv.GetRowDisplayRectangle(e.RowIndex, false);
+                Rectangle rect = new Rectangle(r.X, r.Y, width - 1, r.Height - 1);
+
+                ControlPaint.DrawBorder(e.Graphics, rect,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid);
+            }
+        }
+
         #endregion
 
         #region Exit
@@ -1414,8 +1462,9 @@ namespace NewRn
                     decimal VozvrKassSum = decimal.Parse(rowGoods["vozvkass"].ToString());
                     //Тут сохраняем тело
 
-                    if (id_otdel != 8)
+                    if (id_otdel != 6)
                         dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+
 
                     decimal RestStartSum = 0;
                     decimal RestStopSum = 0;
@@ -1444,9 +1493,9 @@ namespace NewRn
 
                     dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, false);
 
-                }
-                MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }                
             }
+            MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void chkRemains_CheckedChanged(object sender, EventArgs e)

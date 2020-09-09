@@ -135,6 +135,12 @@ namespace NewRn
             rn.Columns.Add(new DataColumn("r1", typeof(double)));
             rn.Columns.Add(new DataColumn("r2", typeof(double)));
             rn.Columns.Add("id_otdel", typeof(int));
+            if (Config.isCompareData)
+            {
+                DataColumn col = new DataColumn("notValidate", typeof(bool));
+                col.DefaultValue = false;
+                rn.Columns.Add(col);
+            }
 
 
 
@@ -185,6 +191,29 @@ namespace NewRn
                 rnRow["r1"] = remStart[0]["remains"];
                 rnRow["r2"] = remFinish[0]["remains"];
                 rnRow["id_otdel"] = id_otdel;
+
+                if (Config.isCompareData && Config.dtDaveRN != null)
+                {
+                    DataRow[] remDaveRN = Config.dtDaveRN.Select($"id_tovar = {id_tovar}");
+                    if (remDaveRN.Count() > 0)
+                    {
+                        if ((decimal)remDaveRN[0]["RestStart"] != decimal.Parse(rnRow["r1"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["RestStop"] != decimal.Parse(rnRow["r2"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["PrihodSum"] != decimal.Parse(rnRow["prihod"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["OtgruzSum"] != decimal.Parse(rnRow["otgruz"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["VozvrSum"] != decimal.Parse(rnRow["vozvr"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["SpisSum"] != decimal.Parse(rnRow["spis"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["InventSpisSum"] != decimal.Parse(rnRow["spis_inv"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["RealizSum"] != decimal.Parse(rnRow["realiz"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["OtgruzOptSum"] != decimal.Parse(rnRow["realiz_opt"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["VozvrKassSum"] != decimal.Parse(rnRow["vozvkass"].ToString())) rnRow["notValidate"] = true;
+                    }
+                    else
+                    {
+                        rnRow["notValidate"] = true;
+                    }
+                }
+
                 rn.Rows.Add(rnRow);
             }
 
@@ -214,7 +243,12 @@ namespace NewRn
             rn.Columns.Add(new DataColumn("r1", typeof(double)));
             rn.Columns.Add(new DataColumn("r2", typeof(double)));
             rn.Columns.Add("id_otdel", typeof(int));
-
+            if (Config.isCompareData)
+            {
+                DataColumn col = new DataColumn("notValidate", typeof(bool));
+                col.DefaultValue = false;
+                rn.Columns.Add(col);
+            }
 
             foreach (DataRow goodsRow in goods.Rows)
             {
@@ -248,6 +282,29 @@ namespace NewRn
                 rnRow["r1"] = remStart[0]["remains"];
                 rnRow["r2"] = remFinish[0]["remains"];
                 rnRow["id_otdel"] = id_otdel;
+
+                if (Config.isCompareData && Config.dtDaveRN != null)
+                {
+                    DataRow[] remDaveRN = Config.dtDaveRN.Select($"id_tovar = {id_tovar}");
+                    if (remDaveRN.Count() > 0)
+                    {
+                        if ((decimal)remDaveRN[0]["RestStart"] != decimal.Parse(rnRow["r1"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["RestStop"] != decimal.Parse(rnRow["r2"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["PrihodSum"] != decimal.Parse(rnRow["prihod"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["OtgruzSum"] != decimal.Parse(rnRow["otgruz"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["VozvrSum"] != decimal.Parse(rnRow["vozvr"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["SpisSum"] != decimal.Parse(rnRow["spis"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["InventSpisSum"] != decimal.Parse(rnRow["spis_inv"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["RealizSum"] != decimal.Parse(rnRow["realiz"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["OtgruzOptSum"] != decimal.Parse(rnRow["realiz_opt"].ToString())) rnRow["notValidate"] = true;
+                        if ((decimal)remDaveRN[0]["VozvrKassSum"] != decimal.Parse(rnRow["vozvkass"].ToString())) rnRow["notValidate"] = true;
+                    }
+                    else
+                    {
+                        rnRow["notValidate"] = true;
+                    }
+                }
+
                 rn.Rows.Add(rnRow);
             }
 
