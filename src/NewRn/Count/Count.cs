@@ -192,9 +192,14 @@ namespace NewRn
                 rnRow["r2"] = remFinish[0]["remains"];
                 rnRow["id_otdel"] = id_otdel;
 
+                if ((int)goodsRow["id_grp1"] == 803)
+                { 
+                
+                }
+
                 if (Config.isCompareData && Config.dtDaveRN != null)
                 {
-                    DataRow[] remDaveRN = Config.dtDaveRN.Select($"id_tovar = {id_tovar}");
+                    DataRow[] remDaveRN = Config.dtDaveRN.Select($"id_tovar = {id_tovar} and id_department = {id_otdel}");
                     if (remDaveRN.Count() > 0)
                     {
                         if ((decimal)remDaveRN[0]["RestStart"] != decimal.Parse(rnRow["r1"].ToString())) rnRow["notValidate"] = true;
@@ -207,10 +212,35 @@ namespace NewRn
                         if ((decimal)remDaveRN[0]["RealizSum"] != decimal.Parse(rnRow["realiz"].ToString())) rnRow["notValidate"] = true;
                         if ((decimal)remDaveRN[0]["OtgruzOptSum"] != decimal.Parse(rnRow["realiz_opt"].ToString())) rnRow["notValidate"] = true;
                         if ((decimal)remDaveRN[0]["VozvrKassSum"] != decimal.Parse(rnRow["vozvkass"].ToString())) rnRow["notValidate"] = true;
+
+                        if ((int)remDaveRN[0]["id_department"] != id_otdel)
+                        {
+                            DataRow newRow = Config.dtListDepsVsTovarNoCorrect.NewRow();
+                            newRow["ean"] = goodsRow["ean"];
+                            newRow["cName"] = goodsRow["cname"];
+                            newRow["depOrginal"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == id_otdel).First()["name"];
+                            newRow["depCopy"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == (int)remDaveRN[0]["id_department"]).First()["name"];
+
+                            Config.dtListDepsVsTovarNoCorrect.Rows.Add(newRow);
+                        }
                     }
                     else
                     {
                         rnRow["notValidate"] = true;
+                        remDaveRN = Config.dtDaveRN.Select($"id_tovar = {id_tovar}");
+                        if (remDaveRN.Count() > 0)
+                        {
+                            if ((int)remDaveRN[0]["id_department"] != id_otdel)
+                            {
+                                DataRow newRow = Config.dtListDepsVsTovarNoCorrect.NewRow();
+                                newRow["ean"] = goodsRow["ean"];
+                                newRow["cName"] = goodsRow["cname"];
+                                newRow["depOrginal"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == id_otdel).First()["name"];
+                                newRow["depCopy"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == (int)remDaveRN[0]["id_department"]).First()["name"];
+
+                                Config.dtListDepsVsTovarNoCorrect.Rows.Add(newRow);
+                            }
+                        }
                     }
                 }
 
@@ -298,6 +328,17 @@ namespace NewRn
                         if ((decimal)remDaveRN[0]["RealizSum"] != decimal.Parse(rnRow["realiz"].ToString())) rnRow["notValidate"] = true;
                         if ((decimal)remDaveRN[0]["OtgruzOptSum"] != decimal.Parse(rnRow["realiz_opt"].ToString())) rnRow["notValidate"] = true;
                         if ((decimal)remDaveRN[0]["VozvrKassSum"] != decimal.Parse(rnRow["vozvkass"].ToString())) rnRow["notValidate"] = true;
+
+                        if ((int)remDaveRN[0]["id_department"] != id_otdel)
+                        {
+                            DataRow newRow = Config.dtListDepsVsTovarNoCorrect.NewRow();
+                            newRow["ean"] = goodsRow["ean"];
+                            newRow["cName"] = goodsRow["cname"];
+                            newRow["depOrginal"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == id_otdel).First()["name"];
+                            newRow["depCopy"] = Config.dtDeps.AsEnumerable().Where(r => r.Field<Int16>("id") == (int)remDaveRN[0]["id_department"]).First()["name"];
+
+                            Config.dtListDepsVsTovarNoCorrect.Rows.Add(newRow);
+                        }
                     }
                     else
                     {

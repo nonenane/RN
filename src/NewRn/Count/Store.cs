@@ -118,6 +118,8 @@ namespace NewRn
             //Console.WriteLine(GC.GetTotalMemory(true).ToString());
 
             Config.dtDaveRN = null;
+            Config.createListDepsVsTovarNoCorrect();
+            //Config.dtListDepsVsTovarNoCorrect = null;
 
 
             if (Config.isCompareData)
@@ -198,6 +200,14 @@ namespace NewRn
             rN = 0;
             remainStart = 0;
             remainFinish = 0;
+
+            Config.dtDaveRN = null;
+            Config.createListDepsVsTovarNoCorrect();
+
+            if (Config.isCompareData)
+            {
+                Config.dtDaveRN = sql.getSaveRN(Config.id_TSaveRN);
+            }
 
             foreach (Department dep in deps)
             {

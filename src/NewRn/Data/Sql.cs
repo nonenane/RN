@@ -56,6 +56,11 @@ namespace NewRn.Data
             {
                 if (departments != null)
                 {
+                    DataRow vvoRow = departments.NewRow();
+                    vvoRow["id"] = 6;
+                    vvoRow["name"] = "ВВО";
+                    departments.Rows.InsertAt(vvoRow, 5);
+
                     DataRow firstRow = departments.NewRow();
                     firstRow["id"] = -1;
                     firstRow["name"] = "Все отделы";

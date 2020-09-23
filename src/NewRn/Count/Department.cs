@@ -216,6 +216,8 @@ namespace NewRn
             table.Columns.Add("r2", typeof(double));
             table.Columns.Add("procent", typeof(double));
             table.Columns.Add("id_otdel", typeof(int));
+            table.Columns.Add("notValidate", typeof(bool));
+
 
             //table.Columns.Add("id", typeof(int));
             //table.Columns.Add("cname", typeof(string));
@@ -241,9 +243,15 @@ namespace NewRn
             decimal value = 0;
             try
             {
-                value = Convert.ToDecimal(rn.Compute("Sum(" + columnName + ")", "id_grp1 = '" + id_group + "'"));
+                object objValue = rn.Compute("Sum(" + columnName + ")", "id_grp1 = '" + id_group + "'");
+                if (objValue == null) return value;
+                if (objValue == DBNull.Value) return value;
+                value = Convert.ToDecimal(objValue);
+
+                //value = Convert.ToDecimal(rn.Compute("Sum(" + columnName + ")", "id_grp1 = '" + id_group + "'"));
             }
-            catch { }
+            catch { 
+            }
             return value;
         }
 
@@ -252,10 +260,43 @@ namespace NewRn
             decimal value = 0;
             try
             {
-                value = Convert.ToDecimal(rn.Compute("Sum(" + columnName + ")", "id_grp2 = '" + id_group + "'"));
+                object objValue = rn.Compute("Sum(" + columnName + ")", "id_grp2 = '" + id_group + "'");
+                if (objValue == null) return value;
+                if (objValue == DBNull.Value) return value;
+                value = Convert.ToDecimal(objValue);
+
+                //value = Convert.ToDecimal(rn.Compute("Sum(" + columnName + ")", "id_grp2 = '" + id_group + "'"));
             }
             catch { }
             return value;
+        }
+
+        private bool getNotValidateGroup(int id_group)
+        {
+            try
+            {
+                return rn.Select($"notValidate = 1 and id_grp1 = {id_group}").Count() > 0;
+            }
+            catch
+            {
+                
+            }
+
+            return false;
+        }
+
+        private bool getNotValidateGroup_inv(int id_group)
+        {
+            try
+            {
+                return rn.Select($"notValidate = 1 and id_grp2 = {id_group}").Count() > 0;
+            }
+            catch
+            {
+
+            }
+
+            return false;
         }
 
         private IDataWorker dataWorker = null;
@@ -295,6 +336,11 @@ namespace NewRn
                         else
                             groupRow["procent"] = 0;
                         groupRow["id_otdel"] = this.id;
+                        if (Config.isCompareData)
+                        {
+                            groupRow["notValidate"] = getNotValidateGroup(group.Id);
+                        }
+
                         groupsRN.Rows.Add(groupRow);
                     }
                     //DataTable dtGroupDataTable = dataWorker.getGroupGroup(this.id);
@@ -451,8 +497,14 @@ namespace NewRn
                         if (GetValueForGroup_inv(group.Id, "realiz_all") != 0)
                             groupRow["procent"] = Math.Round(Convert.ToDecimal(GetValueForGroup_inv(group.Id, "rn") * 100 / GetValueForGroup_inv(group.Id, "realiz_all")), 2);
                         else
-                            groupRow["procent"] = 0;
+                            groupRow["procent"] = 0;                        
                         groupRow["id_otdel"] = this.id;
+
+                        if (Config.isCompareData)
+                        {
+                            groupRow["notValidate"] = getNotValidateGroup(group.Id);
+                        }
+
                         groupsRN.Rows.Add(groupRow);
                     }
                     //DataTable dtGroupDataTable = dataWorker.getGroupGroup(this.id);
@@ -595,6 +647,13 @@ namespace NewRn
 
             table.Columns.Add("r1", typeof(double));
             table.Columns.Add("r2", typeof(double));
+            table.Columns.Add("notValidate", typeof(bool));
+            table.Columns.Add("id_grp1");
+            table.Columns.Add("id_grp2");
+            table.Columns.Add("id_otdel", typeof(int));
+            table.Columns.Add("id_tovar", typeof(int));
+
+
             // table.Columns.Add("id_otdel", typeof(int));
 
             //table.Columns.Add("ean", typeof(string));
@@ -639,6 +698,17 @@ namespace NewRn
                 goodRow["rn"] = groupRow["rn"];
                 goodRow["r1"] = groupRow["r1"];
                 goodRow["r2"] = groupRow["r2"];
+
+                goodRow["id_grp1"] = groupRow["id_grp1"];
+                goodRow["id_grp2"] = groupRow["id_grp2"];
+                goodRow["id_otdel"] = groupRow["id_otdel"];
+                goodRow["id_tovar"] = groupRow["id"];
+
+
+                if (Config.isCompareData)
+                {
+                    goodRow["notValidate"] = groupRow["notValidate"];                    
+                }
                 // goodRow["id_otdel"] = groupRow["id_otdel"];
                 goods.Rows.Add(goodRow);
             }
@@ -668,6 +738,10 @@ namespace NewRn
                 goodRow["rn"] = groupRow["rn"];
                 goodRow["r1"] = groupRow["r1"];
                 goodRow["r2"] = groupRow["r2"];
+                if (Config.isCompareData)
+                {
+                    goodRow["notValidate"] = groupRow["notValidate"];
+                }
                 // goodRow["id_otdel"] = groupRow["id_otdel"];
                 goods.Rows.Add(goodRow);
             }

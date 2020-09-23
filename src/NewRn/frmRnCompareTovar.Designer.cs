@@ -29,6 +29,20 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btClose = new System.Windows.Forms.Button();
             this.dgvData = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -37,10 +51,10 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmbDeps = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cmbGrp1 = new System.Windows.Forms.ComboBox();
-            this.cmbGrp2 = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbGrp2 = new System.Windows.Forms.ComboBox();
+            this.cmbGrp1 = new System.Windows.Forms.ComboBox();
             this.tbEan = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cEan = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,6 +88,7 @@
             this.btClose.Size = new System.Drawing.Size(48, 48);
             this.btClose.TabIndex = 6;
             this.btClose.UseVisualStyleBackColor = true;
+            this.btClose.Click += new System.EventHandler(this.btClose_Click);
             // 
             // dgvData
             // 
@@ -133,6 +148,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(42, 552);
             this.label1.Name = "label1";
@@ -185,17 +201,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Группы товаров";
             // 
-            // cmbGrp1
+            // label3
             // 
-            this.cmbGrp1.DisplayMember = "name";
-            this.cmbGrp1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrp1.FormattingEnabled = true;
-            this.cmbGrp1.Location = new System.Drawing.Point(115, 19);
-            this.cmbGrp1.Name = "cmbGrp1";
-            this.cmbGrp1.Size = new System.Drawing.Size(199, 21);
-            this.cmbGrp1.TabIndex = 7;
-            this.cmbGrp1.ValueMember = "id";
-            this.cmbGrp1.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp1_SelectionChangeCommitted);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 49);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 29;
+            this.label3.Text = "Инв.группа";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(64, 13);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Т/У группа";
             // 
             // cmbGrp2
             // 
@@ -209,23 +231,17 @@
             this.cmbGrp2.ValueMember = "id";
             this.cmbGrp2.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp2_SelectionChangeCommitted);
             // 
-            // label2
+            // cmbGrp1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Т/У группа";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 49);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Инв.группа";
+            this.cmbGrp1.DisplayMember = "name";
+            this.cmbGrp1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGrp1.FormattingEnabled = true;
+            this.cmbGrp1.Location = new System.Drawing.Point(115, 19);
+            this.cmbGrp1.Name = "cmbGrp1";
+            this.cmbGrp1.Size = new System.Drawing.Size(199, 21);
+            this.cmbGrp1.TabIndex = 7;
+            this.cmbGrp1.ValueMember = "id";
+            this.cmbGrp1.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp1_SelectionChangeCommitted);
             // 
             // tbEan
             // 
@@ -234,6 +250,7 @@
             this.tbEan.Name = "tbEan";
             this.tbEan.Size = new System.Drawing.Size(223, 20);
             this.tbEan.TabIndex = 29;
+            this.tbEan.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
             // 
             // tbName
             // 
@@ -242,10 +259,12 @@
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(223, 20);
             this.tbName.TabIndex = 29;
+            this.tbName.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
             // 
             // cEan
             // 
             this.cEan.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cEan.DataPropertyName = "ean";
             this.cEan.Frozen = true;
             this.cEan.HeaderText = "EAN";
             this.cEan.MinimumWidth = 90;
@@ -256,6 +275,7 @@
             // cName
             // 
             this.cName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cName.DataPropertyName = "cname";
             this.cName.Frozen = true;
             this.cName.HeaderText = "Наименование товара";
             this.cName.MinimumWidth = 150;
@@ -271,84 +291,127 @@
             // 
             // cOstStart
             // 
+            this.cOstStart.DataPropertyName = "r1";
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.cOstStart.DefaultCellStyle = dataGridViewCellStyle2;
             this.cOstStart.HeaderText = "Остаток на начало";
             this.cOstStart.Name = "cOstStart";
             this.cOstStart.ReadOnly = true;
             // 
             // cOstEnd
             // 
+            this.cOstEnd.DataPropertyName = "r2";
+            dataGridViewCellStyle3.Format = "N2";
+            this.cOstEnd.DefaultCellStyle = dataGridViewCellStyle3;
             this.cOstEnd.HeaderText = "Остаток на конец";
             this.cOstEnd.Name = "cOstEnd";
             this.cOstEnd.ReadOnly = true;
             // 
             // cPrihod
             // 
+            this.cPrihod.DataPropertyName = "prihod";
+            dataGridViewCellStyle4.Format = "N2";
+            this.cPrihod.DefaultCellStyle = dataGridViewCellStyle4;
             this.cPrihod.HeaderText = "Приход";
             this.cPrihod.Name = "cPrihod";
             this.cPrihod.ReadOnly = true;
             // 
             // cOtgruz
             // 
+            this.cOtgruz.DataPropertyName = "otgruz";
+            dataGridViewCellStyle5.Format = "N2";
+            this.cOtgruz.DefaultCellStyle = dataGridViewCellStyle5;
             this.cOtgruz.HeaderText = "Отгрузка";
             this.cOtgruz.Name = "cOtgruz";
             this.cOtgruz.ReadOnly = true;
             // 
             // cVozvr
             // 
+            this.cVozvr.DataPropertyName = "vozvr";
+            dataGridViewCellStyle6.Format = "N2";
+            this.cVozvr.DefaultCellStyle = dataGridViewCellStyle6;
             this.cVozvr.HeaderText = "Возврат";
             this.cVozvr.Name = "cVozvr";
             this.cVozvr.ReadOnly = true;
             // 
             // cSpis
             // 
+            this.cSpis.DataPropertyName = "spis";
+            dataGridViewCellStyle7.Format = "N2";
+            this.cSpis.DefaultCellStyle = dataGridViewCellStyle7;
             this.cSpis.HeaderText = "Списание";
             this.cSpis.Name = "cSpis";
             this.cSpis.ReadOnly = true;
             // 
             // cSpisInv
             // 
+            this.cSpisInv.DataPropertyName = "spis_inv";
+            dataGridViewCellStyle8.Format = "N2";
+            this.cSpisInv.DefaultCellStyle = dataGridViewCellStyle8;
             this.cSpisInv.HeaderText = "Списание Инв.";
             this.cSpisInv.Name = "cSpisInv";
             this.cSpisInv.ReadOnly = true;
             // 
             // cPrihodGlob
             // 
+            this.cPrihodGlob.DataPropertyName = "prihod_all";
+            dataGridViewCellStyle9.Format = "N2";
+            this.cPrihodGlob.DefaultCellStyle = dataGridViewCellStyle9;
             this.cPrihodGlob.HeaderText = "Общий приход";
             this.cPrihodGlob.Name = "cPrihodGlob";
             this.cPrihodGlob.ReadOnly = true;
             // 
             // cRealiz
             // 
+            this.cRealiz.DataPropertyName = "realiz";
+            dataGridViewCellStyle10.Format = "N2";
+            this.cRealiz.DefaultCellStyle = dataGridViewCellStyle10;
             this.cRealiz.HeaderText = "Реализация";
             this.cRealiz.Name = "cRealiz";
             this.cRealiz.ReadOnly = true;
             // 
             // cOtgruzOpt
             // 
+            this.cOtgruzOpt.DataPropertyName = "realiz_opt";
+            dataGridViewCellStyle11.Format = "N2";
+            this.cOtgruzOpt.DefaultCellStyle = dataGridViewCellStyle11;
             this.cOtgruzOpt.HeaderText = "Опт. отгрузки";
             this.cOtgruzOpt.Name = "cOtgruzOpt";
             this.cOtgruzOpt.ReadOnly = true;
             // 
             // cVozvrKass
             // 
+            this.cVozvrKass.DataPropertyName = "vozvkass";
+            dataGridViewCellStyle12.Format = "N2";
+            this.cVozvrKass.DefaultCellStyle = dataGridViewCellStyle12;
             this.cVozvrKass.HeaderText = "Возвраты с касс";
             this.cVozvrKass.Name = "cVozvrKass";
             this.cVozvrKass.ReadOnly = true;
             // 
             // cRealizGlob
             // 
+            this.cRealizGlob.DataPropertyName = "realiz_all";
+            dataGridViewCellStyle13.Format = "N2";
+            this.cRealizGlob.DefaultCellStyle = dataGridViewCellStyle13;
             this.cRealizGlob.HeaderText = "Общ. реализация";
             this.cRealizGlob.Name = "cRealizGlob";
             this.cRealizGlob.ReadOnly = true;
             // 
             // cRN
             // 
+            this.cRN.DataPropertyName = "rn";
+            dataGridViewCellStyle14.Format = "N2";
+            this.cRN.DefaultCellStyle = dataGridViewCellStyle14;
             this.cRN.HeaderText = "РН";
             this.cRN.Name = "cRN";
             this.cRN.ReadOnly = true;
             // 
             // cRnPrc
             // 
+            this.cRnPrc.DataPropertyName = "procent";
+            dataGridViewCellStyle15.Format = "N2";
+            this.cRnPrc.DefaultCellStyle = dataGridViewCellStyle15;
             this.cRnPrc.HeaderText = "Процент РН";
             this.cRnPrc.Name = "cRnPrc";
             this.cRnPrc.ReadOnly = true;
@@ -367,8 +430,13 @@
             this.Controls.Add(this.btPrint);
             this.Controls.Add(this.btClose);
             this.Controls.Add(this.dgvData);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MinimizeBox = false;
             this.Name = "frmRnCompareTovar";
-            this.Text = "frmRnCompareTovar";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Сравнение РН по товарам";
             this.Load += new System.EventHandler(this.frmRnCompareTovar_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).EndInit();
             this.groupBox2.ResumeLayout(false);

@@ -111,7 +111,9 @@ namespace NewRn
                 r2.Visible = chkRemains.Checked;
 
                 cbShipped.Enabled = optCheckBox.Checked;
-                cmPrint.Visible = false;                                
+                cmPrint.Visible = false;          
+                
+                Config.dtDeps = sql.getDepartments(true);
             }
             catch (Exception ex)
             {
@@ -183,6 +185,9 @@ namespace NewRn
                 isOptCheckBox = optCheckBox.Checked;
                 isShipped = cbShipped.Checked;
                 isWithInvSpis = chbWithInvSpis.Checked;
+                
+                if (Config.isCompareData)
+                    Console.WriteLine(Config.dtDaveRN.Rows.Count);
 
                 //
                 mult_count = false;
@@ -327,6 +332,10 @@ namespace NewRn
                 GC.Collect();
                 cmbDepartments_SelectedIndexChanged(sender, e);
 
+                if (Config.dtListDepsVsTovarNoCorrect != null && Config.dtListDepsVsTovarNoCorrect.Rows.Count > 0)
+                {
+                    new frmDepsVsTovarNoCorrect().ShowDialog();
+                }
             }
             else
             {
@@ -693,29 +702,42 @@ namespace NewRn
                                 else
                                 {
                                     tmpforGoods.Merge(selectedDepartment.GetGoods_inv(Convert.ToInt32(split[j])));
-                                }
+                                }                            
                             }
-                            goods = new GoodsDialog(groupName, id_group,
-                               tmpforGoods, out_Data);
+
+                            if (Config.isCompareData && (grdPrices.DataSource as DataTable).Columns.Contains("notValidate") && (bool)(grdPrices.DataSource as DataTable).DefaultView[e.RowIndex]["notValidate"]) {
+                                new frmRnCompareTovar() { dtTovarCalculation = tmpforGoods,id_otdel = Id_otdel,id_group = Convert.ToInt32(split[0]) }.ShowDialog();
+                            }
+                            else
+                            {
+                                goods = new GoodsDialog(groupName, id_group,tmpforGoods, out_Data); goods.ShowDialog();
+                            }
                         }
                         else
                         {
                             if (rBGpr1.Checked)
                             {
-                                goods = new GoodsDialog(groupName, id_group, selectedDepartment.GetGoods(Convert.ToInt32(split[0])), out_Data);
+                                if (Config.isCompareData && (grdPrices.DataSource as DataTable).Columns.Contains("notValidate") && (bool)(grdPrices.DataSource as DataTable).DefaultView[e.RowIndex]["notValidate"])
+                                {
+                                    new frmRnCompareTovar() { dtTovarCalculation = selectedDepartment.GetGoods(Convert.ToInt32(split[0])), id_otdel = Id_otdel, id_group = Convert.ToInt32(split[0]) }.ShowDialog();
+                                }
+                                else
+                                {
+                                    goods = new GoodsDialog(groupName, id_group, selectedDepartment.GetGoods(Convert.ToInt32(split[0])), out_Data); goods.ShowDialog();
+                                }
                             }
                             else
                             {
-                                goods = new GoodsDialog(groupName, id_group, selectedDepartment.GetGoods_inv(Convert.ToInt32(split[0])), out_Data);
+                                if (Config.isCompareData && (grdPrices.DataSource as DataTable).Columns.Contains("notValidate") && (bool)(grdPrices.DataSource as DataTable).DefaultView[e.RowIndex]["notValidate"])
+                                {
+                                    new frmRnCompareTovar() { dtTovarCalculation = selectedDepartment.GetGoods_inv(Convert.ToInt32(split[0])), id_otdel = Id_otdel, id_group = Convert.ToInt32(split[0]) }.ShowDialog();
+                                }
+                                else
+                                {
+                                    goods = new GoodsDialog(groupName, id_group, selectedDepartment.GetGoods_inv(Convert.ToInt32(split[0])), out_Data); goods.ShowDialog();
+                                }
                             }
                         }
-
-                        if (goods.ShowDialog() == DialogResult.Cancel)
-                        {
-
-                        }
-
-
                     }
                 }
             }
@@ -795,7 +817,7 @@ namespace NewRn
                     }
                     if (Convert.ToInt32(cmbDepartments.SelectedValue) == listIDInt)
                     {
-                        nnn = new DataTable();
+                        nnn = null;// new DataTable();
                         addList.Clear();
                         prihodAll_sum = 0;
                         RealizAll_sum = 0;
@@ -815,10 +837,17 @@ namespace NewRn
                             R2_sum += selectedDepartment.R2;
                             if (rBGpr1.Checked)
                             {
-                                nnn.Merge(selectedDepartment.Groups);
+                                if (nnn == null)
+                                    nnn = selectedDepartment.Groups.Copy();
+                                else
+                                    nnn.Merge(selectedDepartment.Groups);
                             }
                             else
-                            { nnn.Merge(selectedDepartment.Groups_inv); }
+                            {
+                                if (nnn == null)
+                                    nnn = selectedDepartment.Groups_inv.Copy();
+                                else nnn.Merge(selectedDepartment.Groups_inv); 
+                            }
                         }
                         if (RealizAll_sum == 0)
                             Procent_sum = 0;
@@ -955,20 +984,27 @@ namespace NewRn
         {
             Config.isCompareData = false;
             Config.id_TSaveRN = 0;
-            DataTable dtResult = sql.validateTSaveRN(dtpStart.Value.Date, dtpFinish.Value.Date, optCheckBox.Checked, cbShipped.Checked, chbWithInvSpis.Checked);
-
-            if (dtResult != null && dtResult.Rows.Count > 0)
+            if (!SelectOneDepartment)
             {
-                MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные за выбранный для расчёта период.\nВыберите операцию:\n", "Расчёт РН", MyMessageBox.MessageBoxButtons.YesNoCancel, new List<string>(new string[] { "Произвести расчёт", "Расчёт со сравнением", "Отмена" }));
+                DataTable dtResult = sql.validateTSaveRN(dtpStart.Value.Date, dtpFinish.Value.Date, optCheckBox.Checked, cbShipped.Checked, chbWithInvSpis.Checked);
 
-                //msgBox.Size = new Size(msgBox.Size.Width + 200, msgBox.Size.Height+200);
-
-                DialogResult dlgResult = msgBox.ShowDialog();
-                if (dlgResult == DialogResult.Cancel) return;
-                if (dlgResult == DialogResult.No)
+                if (dtResult != null && dtResult.Rows.Count > 0)
                 {
-                    Config.isCompareData = true;
-                    Config.id_TSaveRN = (int)dtResult.Rows[0]["id"];
+                    MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные за выбранный для расчёта период.\nВыберите операцию:\n", "Расчёт РН", MyMessageBox.MessageBoxButtons.YesNoCancel, new List<string>(new string[] { "Произвести расчёт", "Расчёт со сравнением", "Отмена" }));
+
+                    //msgBox.Size = new Size(msgBox.Size.Width + 200, msgBox.Size.Height+200);
+
+                    DialogResult dlgResult = msgBox.ShowDialog();
+                    if (dlgResult == DialogResult.Cancel) return;
+                    if (dlgResult == DialogResult.No)
+                    {
+                        Config.isCompareData = true;
+                        Config.id_TSaveRN = (int)dtResult.Rows[0]["id"];
+                    }
+                }
+                else
+                {
+                    if (MessageBox.Show("Посчитать РН?", "РН", MessageBoxButtons.YesNo) == DialogResult.No) return;
                 }
             }
             else
@@ -1336,6 +1372,7 @@ namespace NewRn
 
         private void grdPrices_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
+            
             if (e.RowIndex != -1 && countResult != null && grdPrices.DataSource!=null && (grdPrices.DataSource as DataTable).DefaultView.Count != 0)
             {
 
@@ -1415,18 +1452,12 @@ namespace NewRn
 
             //Тут сохраняем заголовок
 
-            dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
+            
 
-            if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
-            {
-                MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            int id_TSaveRN = (int)dtResult.Rows[0]["id"];
+           
 
             dtResult = sql.validateTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis);
-
+            int id_TSaveRN = (int)dtResult.Rows[0]["id"];
             if (dtResult != null && dtResult.Rows.Count > 0)
             {
                 MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные\nза расчитанный период.\nСохранить новый расчёт?\n", "Сохранение расчёта РН", MyMessageBox.MessageBoxButtons.YesNo, new List<string>(new string[] { "Да", "Нет" }));
@@ -1436,8 +1467,19 @@ namespace NewRn
                 dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
             }
 
+            dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
 
-            foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
+            if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
+            {
+                MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            id_TSaveRN = (int)dtResult.Rows[0]["id"];
+
+            DataTable dtDeps = sql.getDepartments(true);
+
+            //foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
+            foreach (DataRow row in dtDeps.Rows)
             {
                 if ((Int16)row["id"] == -1) continue;
 
@@ -1464,7 +1506,9 @@ namespace NewRn
 
                     if (id_otdel != 6)
                         dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
-
+                    else
+                        dtResult = sqlVVO.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+                    
 
                     decimal RestStartSum = 0;
                     decimal RestStopSum = 0;

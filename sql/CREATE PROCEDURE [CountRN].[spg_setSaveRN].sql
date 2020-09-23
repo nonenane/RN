@@ -49,10 +49,10 @@ BEGIN TRY
 			END
 		ELSE
 			BEGIN
-					IF EXISTS(select id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar)
+					IF EXISTS(select id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar and id_department = @id_department)
 						BEGIN
 							DECLARE @id int
-								select @id = id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar
+								select @id = id from CountRN.j_SaveRN t where t.id_tSaveRN = @id_tSaveRN and t.id_tovar = @id_tovar and id_department = @id_department
 
 
 							UPDATE 
