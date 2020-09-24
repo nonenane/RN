@@ -134,6 +134,7 @@ namespace NewRn
             rn.Columns.Add("id_grp2");
             rn.Columns.Add(new DataColumn("r1", typeof(double)));
             rn.Columns.Add(new DataColumn("r2", typeof(double)));
+            rn.Columns.Add(new DataColumn("procent", typeof(double)));
             rn.Columns.Add("id_otdel", typeof(int));
             if (Config.isCompareData)
             {
@@ -192,10 +193,11 @@ namespace NewRn
                 rnRow["r2"] = remFinish[0]["remains"];
                 rnRow["id_otdel"] = id_otdel;
 
-                if ((int)goodsRow["id_grp1"] == 803)
-                { 
-                
-                }
+
+                if (realiz != 0)
+                    rnRow["procent"] = Math.Round(RN * 100 / realiz, 2);
+                else
+                    rnRow["procent"] = 0;
 
                 if (Config.isCompareData && Config.dtDaveRN != null)
                 {

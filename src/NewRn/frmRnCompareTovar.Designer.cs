@@ -285,6 +285,7 @@
             // 
             // cTypeCalc
             // 
+            this.cTypeCalc.DataPropertyName = "nameType";
             this.cTypeCalc.HeaderText = "Тип расчета";
             this.cTypeCalc.Name = "cTypeCalc";
             this.cTypeCalc.ReadOnly = true;

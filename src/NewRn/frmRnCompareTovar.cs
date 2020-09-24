@@ -46,7 +46,17 @@ namespace NewRn
             catch (Exception ex) { }
 
             dtData = dtTovarCalculation.Copy();
-            if (dtRN != null && dtRN.Rows.Count > 0 && dtTovarCalculation != null && dtTovarCalculation.Rows.Count > 0)
+            if (!dtData.Columns.Contains("nameType"))
+            {
+                dtData.Columns.Add(new DataColumn("nameType", typeof(string)) { DefaultValue = "рассчитанные" });
+            }
+
+            if (!dtData.Columns.Contains("procent"))
+            {
+                dtData.Columns.Add(new DataColumn("procent", typeof(decimal)));
+            }
+
+            if (dtRN != null && dtRN.Rows.Count > 0 && dtData != null && dtTovarCalculation.Rows.Count > 0)
             {
                 foreach (DataRow row in dtTovarCalculation.Rows)
                 {
@@ -65,6 +75,24 @@ namespace NewRn
                         cloneRow["realiz"] = rowCollect.First()["RealizSum"];
                         cloneRow["realiz_opt"] = rowCollect.First()["OtgruzOptSum"];
                         cloneRow["vozvkass"] = rowCollect.First()["VozvrKassSum"];
+                        cloneRow["nameType"] = "сохраненные";
+
+                        cloneRow["prihod_all"] = (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["OtgruzSum"] - (decimal)rowCollect.First()["VozvrSum"] - (decimal)rowCollect.First()["SpisSum"] - (decimal)rowCollect.First()["OtgruzOptSum"];
+
+                        cloneRow["realiz_all"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"];
+
+                        cloneRow["rn"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"];
+
+
+                        if ((double)cloneRow["rn"] == 0 || (double)cloneRow["realiz_all"] == 0)
+                            cloneRow["procent"] = (decimal)0;
+                        else
+                            cloneRow["procent"] = Math.Round((((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"]) / ((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"])) * 100,2);
+                        //cloneRow["procent"] = ((decimal)cloneRow["rn"] / (decimal)cloneRow["realiz_all"]) * 100;
+
+                        
+                                               
+
                         //cloneRow[""] = rowCollect.First()[""];
                         //cloneRow[""] = rowCollect.First()[""];
                         dtData.Rows.Add(cloneRow);
@@ -177,6 +205,7 @@ namespace NewRn
                     filter += (filter.Length == 0 ? "" : " and ") + $"id_grp2 = {cmbGrp2.SelectedValue}";
 
                 dtData.DefaultView.RowFilter = filter;
+                dtData.DefaultView.Sort = "id_tovar asc ";
             }
             catch
             {

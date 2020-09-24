@@ -652,6 +652,7 @@ namespace NewRn
             table.Columns.Add("id_grp2");
             table.Columns.Add("id_otdel", typeof(int));
             table.Columns.Add("id_tovar", typeof(int));
+            table.Columns.Add("procent", typeof(decimal));
 
 
             // table.Columns.Add("id_otdel", typeof(int));
@@ -703,7 +704,7 @@ namespace NewRn
                 goodRow["id_grp2"] = groupRow["id_grp2"];
                 goodRow["id_otdel"] = groupRow["id_otdel"];
                 goodRow["id_tovar"] = groupRow["id"];
-
+                goodRow["procent"] = groupRow["procent"];
 
                 if (Config.isCompareData)
                 {
