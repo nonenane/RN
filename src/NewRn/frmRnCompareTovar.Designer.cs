@@ -45,18 +45,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btClose = new System.Windows.Forms.Button();
             this.dgvData = new System.Windows.Forms.DataGridView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btPrint = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cmbDeps = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbGrp2 = new System.Windows.Forms.ComboBox();
-            this.cmbGrp1 = new System.Windows.Forms.ComboBox();
-            this.tbEan = new System.Windows.Forms.TextBox();
-            this.tbName = new System.Windows.Forms.TextBox();
             this.cEan = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cTypeCalc = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,6 +62,18 @@
             this.cRealizGlob = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRnPrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btPrint = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmbDeps = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbGrp2 = new System.Windows.Forms.ComboBox();
+            this.cmbGrp1 = new System.Windows.Forms.ComboBox();
+            this.tbEan = new System.Windows.Forms.TextBox();
+            this.tbName = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -135,131 +135,8 @@
             this.dgvData.Size = new System.Drawing.Size(1289, 390);
             this.dgvData.TabIndex = 5;
             this.dgvData.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgvData_ColumnWidthChanged);
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(153)))));
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(15, 548);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(21, 21);
-            this.panel1.TabIndex = 8;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(42, 552);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "имеются различия в данных";
-            // 
-            // btPrint
-            // 
-            this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btPrint.Image = global::NewRn.Properties.Resources.WZPRINT;
-            this.btPrint.Location = new System.Drawing.Point(1199, 534);
-            this.btPrint.Name = "btPrint";
-            this.btPrint.Size = new System.Drawing.Size(48, 48);
-            this.btPrint.TabIndex = 6;
-            this.btPrint.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cmbDeps);
-            this.groupBox2.Location = new System.Drawing.Point(15, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(217, 84);
-            this.groupBox2.TabIndex = 28;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Отдел:";
-            // 
-            // cmbDeps
-            // 
-            this.cmbDeps.DisplayMember = "name";
-            this.cmbDeps.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDeps.FormattingEnabled = true;
-            this.cmbDeps.Location = new System.Drawing.Point(6, 26);
-            this.cmbDeps.Name = "cmbDeps";
-            this.cmbDeps.Size = new System.Drawing.Size(199, 21);
-            this.cmbDeps.TabIndex = 7;
-            this.cmbDeps.ValueMember = "id";
-            this.cmbDeps.SelectionChangeCommitted += new System.EventHandler(this.cmbDeps_SelectionChangeCommitted);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.cmbGrp2);
-            this.groupBox1.Controls.Add(this.cmbGrp1);
-            this.groupBox1.Location = new System.Drawing.Point(238, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(328, 84);
-            this.groupBox1.TabIndex = 28;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Группы товаров";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 49);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Инв.группа";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Т/У группа";
-            // 
-            // cmbGrp2
-            // 
-            this.cmbGrp2.DisplayMember = "name";
-            this.cmbGrp2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrp2.FormattingEnabled = true;
-            this.cmbGrp2.Location = new System.Drawing.Point(115, 46);
-            this.cmbGrp2.Name = "cmbGrp2";
-            this.cmbGrp2.Size = new System.Drawing.Size(199, 21);
-            this.cmbGrp2.TabIndex = 7;
-            this.cmbGrp2.ValueMember = "id";
-            this.cmbGrp2.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp2_SelectionChangeCommitted);
-            // 
-            // cmbGrp1
-            // 
-            this.cmbGrp1.DisplayMember = "name";
-            this.cmbGrp1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGrp1.FormattingEnabled = true;
-            this.cmbGrp1.Location = new System.Drawing.Point(115, 19);
-            this.cmbGrp1.Name = "cmbGrp1";
-            this.cmbGrp1.Size = new System.Drawing.Size(199, 21);
-            this.cmbGrp1.TabIndex = 7;
-            this.cmbGrp1.ValueMember = "id";
-            this.cmbGrp1.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp1_SelectionChangeCommitted);
-            // 
-            // tbEan
-            // 
-            this.tbEan.Location = new System.Drawing.Point(12, 112);
-            this.tbEan.MaxLength = 13;
-            this.tbEan.Name = "tbEan";
-            this.tbEan.Size = new System.Drawing.Size(223, 20);
-            this.tbEan.TabIndex = 29;
-            this.tbEan.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
-            // 
-            // tbName
-            // 
-            this.tbName.Location = new System.Drawing.Point(238, 112);
-            this.tbName.MaxLength = 250;
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(223, 20);
-            this.tbName.TabIndex = 29;
-            this.tbName.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
+            this.dgvData.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgvData_RowPostPaint);
+            this.dgvData.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvData_RowPrePaint);
             // 
             // cEan
             // 
@@ -416,6 +293,131 @@
             this.cRnPrc.HeaderText = "Процент РН";
             this.cRnPrc.Name = "cRnPrc";
             this.cRnPrc.ReadOnly = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(153)))));
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(15, 548);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(21, 21);
+            this.panel1.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(42, 552);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(151, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "имеются различия в данных";
+            // 
+            // btPrint
+            // 
+            this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btPrint.Image = global::NewRn.Properties.Resources.WZPRINT;
+            this.btPrint.Location = new System.Drawing.Point(1199, 534);
+            this.btPrint.Name = "btPrint";
+            this.btPrint.Size = new System.Drawing.Size(48, 48);
+            this.btPrint.TabIndex = 6;
+            this.btPrint.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.cmbDeps);
+            this.groupBox2.Location = new System.Drawing.Point(15, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(217, 84);
+            this.groupBox2.TabIndex = 28;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Отдел:";
+            // 
+            // cmbDeps
+            // 
+            this.cmbDeps.DisplayMember = "name";
+            this.cmbDeps.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDeps.FormattingEnabled = true;
+            this.cmbDeps.Location = new System.Drawing.Point(6, 26);
+            this.cmbDeps.Name = "cmbDeps";
+            this.cmbDeps.Size = new System.Drawing.Size(199, 21);
+            this.cmbDeps.TabIndex = 7;
+            this.cmbDeps.ValueMember = "id";
+            this.cmbDeps.SelectionChangeCommitted += new System.EventHandler(this.cmbDeps_SelectionChangeCommitted);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.cmbGrp2);
+            this.groupBox1.Controls.Add(this.cmbGrp1);
+            this.groupBox1.Location = new System.Drawing.Point(238, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(328, 84);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Группы товаров";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 49);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 29;
+            this.label3.Text = "Инв.группа";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(64, 13);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Т/У группа";
+            // 
+            // cmbGrp2
+            // 
+            this.cmbGrp2.DisplayMember = "name";
+            this.cmbGrp2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGrp2.FormattingEnabled = true;
+            this.cmbGrp2.Location = new System.Drawing.Point(115, 46);
+            this.cmbGrp2.Name = "cmbGrp2";
+            this.cmbGrp2.Size = new System.Drawing.Size(199, 21);
+            this.cmbGrp2.TabIndex = 7;
+            this.cmbGrp2.ValueMember = "id";
+            this.cmbGrp2.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp2_SelectionChangeCommitted);
+            // 
+            // cmbGrp1
+            // 
+            this.cmbGrp1.DisplayMember = "name";
+            this.cmbGrp1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbGrp1.FormattingEnabled = true;
+            this.cmbGrp1.Location = new System.Drawing.Point(115, 19);
+            this.cmbGrp1.Name = "cmbGrp1";
+            this.cmbGrp1.Size = new System.Drawing.Size(199, 21);
+            this.cmbGrp1.TabIndex = 7;
+            this.cmbGrp1.ValueMember = "id";
+            this.cmbGrp1.SelectionChangeCommitted += new System.EventHandler(this.cmbGrp1_SelectionChangeCommitted);
+            // 
+            // tbEan
+            // 
+            this.tbEan.Location = new System.Drawing.Point(12, 112);
+            this.tbEan.MaxLength = 13;
+            this.tbEan.Name = "tbEan";
+            this.tbEan.Size = new System.Drawing.Size(223, 20);
+            this.tbEan.TabIndex = 29;
+            this.tbEan.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
+            // 
+            // tbName
+            // 
+            this.tbName.Location = new System.Drawing.Point(238, 112);
+            this.tbName.MaxLength = 250;
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(223, 20);
+            this.tbName.TabIndex = 29;
+            this.tbName.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
             // 
             // frmRnCompareTovar
             // 

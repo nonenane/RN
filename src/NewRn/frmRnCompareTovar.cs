@@ -51,6 +51,16 @@ namespace NewRn
                 dtData.Columns.Add(new DataColumn("nameType", typeof(string)) { DefaultValue = "рассчитанные" });
             }
 
+            if (!dtData.Columns.Contains("idType"))
+            {
+                dtData.Columns.Add(new DataColumn("idType", typeof(int)) { DefaultValue = 1 });
+            }
+
+            if (!dtData.Columns.Contains("isError"))
+            {
+                dtData.Columns.Add(new DataColumn("isError", typeof(bool)) { DefaultValue = false });
+            }
+
             if (!dtData.Columns.Contains("procent"))
             {
                 dtData.Columns.Add(new DataColumn("procent", typeof(decimal)));
@@ -76,6 +86,8 @@ namespace NewRn
                         cloneRow["realiz_opt"] = rowCollect.First()["OtgruzOptSum"];
                         cloneRow["vozvkass"] = rowCollect.First()["VozvrKassSum"];
                         cloneRow["nameType"] = "сохраненные";
+                        cloneRow["idType"] = 2;
+                        cloneRow["isError"] = false;
 
                         cloneRow["prihod_all"] = (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["OtgruzSum"] - (decimal)rowCollect.First()["VozvrSum"] - (decimal)rowCollect.First()["SpisSum"] - (decimal)rowCollect.First()["OtgruzOptSum"];
 
@@ -90,14 +102,39 @@ namespace NewRn
                             cloneRow["procent"] = Math.Round((((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"]) / ((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"])) * 100,2);
                         //cloneRow["procent"] = ((decimal)cloneRow["rn"] / (decimal)cloneRow["realiz_all"]) * 100;
 
-                        
-                                               
+
+                        EnumerableRowCollection<DataRow> rowCollectType2 = dtData.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"] && r.Field<int>("idType") == 1);
+                        DataRow rowType2 = rowCollectType2.First();
+                        if (
+                        (double)cloneRow["r1"] != (double)rowType2["r1"] ||
+                        (double)cloneRow["r2"] != (double)rowType2["r2"] ||
+                        (double)cloneRow["prihod"] != (double)rowType2["prihod"] ||
+                        (double)cloneRow["otgruz"] != (double)rowType2["otgruz"] ||
+                        (double)cloneRow["vozvr"] != (double)rowType2["vozvr"] ||
+                        (double)cloneRow["spis"] != (double)rowType2["spis"] ||
+                        (double)cloneRow["spis_inv"] != (double)rowType2["spis_inv"] ||
+                        (double)cloneRow["realiz"] != (double)rowType2["realiz"] ||
+                        (double)cloneRow["realiz_opt"] != (double)rowType2["realiz_opt"] ||
+                        (double)cloneRow["vozvkass"] != (double)rowType2["vozvkass"] ||
+                        (double)cloneRow["prihod_all"] != (double)rowType2["prihod_all"] ||
+                        (double)cloneRow["realiz_all"] != (double)rowType2["realiz_all"] ||
+                        (double)cloneRow["rn"] != (double)rowType2["rn"] ||
+                        (decimal)cloneRow["procent"] != (decimal)rowType2["procent"])
+                        {
+                            rowType2["isError"] = true;
+                            cloneRow["isError"] = true;
+                        }
 
                         //cloneRow[""] = rowCollect.First()[""];
                         //cloneRow[""] = rowCollect.First()[""];
                         dtData.Rows.Add(cloneRow);
-                    }                    
+                    }
+
+                    //rowCollect = dtData.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"] && r.Field<int>("idType")==1);
+                   
+
                 }
+
                 /*
                 int id_tovar = int.Parse(rowGoods["id"].ToString());
                 int id_grp1 = int.Parse(rowGoods["id_grp1"].ToString());
@@ -221,6 +258,44 @@ namespace NewRn
         private void tbEan_TextChanged(object sender, EventArgs e)
         {
             setFilter();
+        }
+
+        private void dgvData_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            DataTable dtData = (dgvData.DataSource as DataTable);
+            if (e.RowIndex != -1 && dtData != null && dtData.DefaultView.Count != 0)
+            {
+                Color rColor = Color.White;
+                DataRowView row = dtData.DefaultView[e.RowIndex];
+                
+                if ((bool)row["isError"]) rColor = panel1.BackColor;
+                
+                dgvData.Rows[e.RowIndex].DefaultCellStyle.BackColor = rColor;
+                dgvData.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = rColor;
+                dgvData.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.Black;
+
+                //if ((int)row["r"] != -1 && (int)row["g"] != -1 && (int)row["b"] != -1)
+                //    dgvData.Rows[e.RowIndex].Cells[cColor.Index].Style.BackColor =
+                //    dgvData.Rows[e.RowIndex].Cells[cColor.Index].Style.SelectionBackColor = Color.FromArgb((int)row["r"], (int)row["g"], (int)row["b"]);
+            }
+        }
+
+        private void dgvData_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            //Рисуем рамку для выделеной строки
+            if (dgv.Rows[e.RowIndex].Selected)
+            {
+                int width = dgv.Width;
+                Rectangle r = dgv.GetRowDisplayRectangle(e.RowIndex, false);
+                Rectangle rect = new Rectangle(r.X, r.Y, width - 1, r.Height - 1);
+
+                ControlPaint.DrawBorder(e.Graphics, rect,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid,
+                    SystemColors.Highlight, 2, ButtonBorderStyle.Solid);
+            }
         }
     }
 }

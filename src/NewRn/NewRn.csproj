@@ -56,18 +56,25 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Framework, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Документы\Проекты\Логирование\Framework\src\Framework\bin\Debug\Framework.dll</HintPath>
+    <Reference Include="EPPlus">
+      <HintPath>..\..\..\DLL\EPPlus.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.Excel, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\RnOtgruz - new checkboxes\RnOtgruz\bin\Debug\Interop.Excel.dll</HintPath>
+    <Reference Include="Framework">
+      <HintPath>..\..\..\DLL\Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="Interop.Excel">
+      <HintPath>..\..\..\Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MyMessageBox">
-      <HintPath>..\..\..\..\..\договор 2710\dllInventoryScaners\MyMessageBox.dll</HintPath>
+      <HintPath>..\..\..\DLL\MyMessageBox.dll</HintPath>
     </Reference>
     <Reference Include="office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <SpecificVersion>False</SpecificVersion>
