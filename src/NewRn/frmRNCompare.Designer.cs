@@ -33,19 +33,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btGetData = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btClose = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.cPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cTypeCalc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOstStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,6 +41,19 @@
             this.cOstEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cPrcRn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btClose = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -122,6 +122,54 @@
             this.dataGridView1.Size = new System.Drawing.Size(1079, 406);
             this.dataGridView1.TabIndex = 3;
             // 
+            // cPeriod
+            // 
+            this.cPeriod.HeaderText = "Период расчета";
+            this.cPeriod.Name = "cPeriod";
+            this.cPeriod.ReadOnly = true;
+            // 
+            // cTypeCalc
+            // 
+            this.cTypeCalc.HeaderText = "Тип расчета";
+            this.cTypeCalc.Name = "cTypeCalc";
+            this.cTypeCalc.ReadOnly = true;
+            // 
+            // cOstStart
+            // 
+            this.cOstStart.HeaderText = "∑ Остаток на начало";
+            this.cOstStart.Name = "cOstStart";
+            this.cOstStart.ReadOnly = true;
+            // 
+            // cPrihod
+            // 
+            this.cPrihod.HeaderText = "∑ Приход";
+            this.cPrihod.Name = "cPrihod";
+            this.cPrihod.ReadOnly = true;
+            // 
+            // cRealiz
+            // 
+            this.cRealiz.HeaderText = "∑ Реализация";
+            this.cRealiz.Name = "cRealiz";
+            this.cRealiz.ReadOnly = true;
+            // 
+            // cOstEnd
+            // 
+            this.cOstEnd.HeaderText = "∑ Остаток на конец";
+            this.cOstEnd.Name = "cOstEnd";
+            this.cOstEnd.ReadOnly = true;
+            // 
+            // cRN
+            // 
+            this.cRN.HeaderText = "∑ РН";
+            this.cRN.Name = "cRN";
+            this.cRN.ReadOnly = true;
+            // 
+            // cPrcRn
+            // 
+            this.cPrcRn.HeaderText = "∑ Процент РН";
+            this.cPrcRn.Name = "cPrcRn";
+            this.cPrcRn.ReadOnly = true;
+            // 
             // btClose
             // 
             this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -172,6 +220,68 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Параметры сохранённых данных";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 59);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(95, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Дата сохранения";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Сохранил";
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Enabled = false;
+            this.checkBox4.Location = new System.Drawing.Point(315, 70);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(170, 17);
+            this.checkBox4.TabIndex = 5;
+            this.checkBox4.Text = "учитывать инвент. списание";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Enabled = false;
+            this.checkBox3.Location = new System.Drawing.Point(315, 47);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(131, 17);
+            this.checkBox3.TabIndex = 5;
+            this.checkBox3.Text = "только отгруженные";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(315, 24);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(172, 17);
+            this.checkBox2.TabIndex = 5;
+            this.checkBox2.Text = "учитывать оптовые отгрузки";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(111, 55);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(175, 20);
+            this.textBox2.TabIndex = 8;
+            // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(71, 29);
@@ -197,113 +307,6 @@
             this.label2.Size = new System.Drawing.Size(19, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "по";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 32);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Сохранил";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(111, 55);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(175, 20);
-            this.textBox2.TabIndex = 8;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 59);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(95, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Дата сохранения";
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(315, 24);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(172, 17);
-            this.checkBox2.TabIndex = 5;
-            this.checkBox2.Text = "учитывать оптовые отгрузки";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(315, 47);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(131, 17);
-            this.checkBox3.TabIndex = 5;
-            this.checkBox3.Text = "только отгруженные";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(315, 70);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(170, 17);
-            this.checkBox4.TabIndex = 5;
-            this.checkBox4.Text = "учитывать инвент. списание";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // cPeriod
-            // 
-            this.cPeriod.HeaderText = "Период расчета";
-            this.cPeriod.Name = "cPeriod";
-            this.cPeriod.ReadOnly = true;
-            // 
-            // cTypeCalc
-            // 
-            this.cTypeCalc.HeaderText = "Тип расчета";
-            this.cTypeCalc.Name = "cTypeCalc";
-            this.cTypeCalc.ReadOnly = true;
-            // 
-            // cOstStart
-            // 
-            this.cOstStart.HeaderText = "∑ Остаток на начало";
-            this.cOstStart.Name = "cOstStart";
-            this.cOstStart.ReadOnly = true;
-            // 
-            // cPrihod
-            // 
-            this.cPrihod.HeaderText = "∑ Приход";
-            this.cPrihod.Name = "cPrihod";
-            this.cPrihod.ReadOnly = true;
-            // 
-            // cRealiz
-            // 
-            this.cRealiz.HeaderText = "∑ Реализация";
-            this.cRealiz.Name = "cRealiz";
-            this.cRealiz.ReadOnly = true;
-            // 
-            // cOstEnd
-            // 
-            this.cOstEnd.HeaderText = "∑ Остаток на конец";
-            this.cOstEnd.Name = "cOstEnd";
-            this.cOstEnd.ReadOnly = true;
-            // 
-            // cRN
-            // 
-            this.cRN.HeaderText = "∑ РН";
-            this.cRN.Name = "cRN";
-            this.cRN.ReadOnly = true;
-            // 
-            // cPrcRn
-            // 
-            this.cPrcRn.HeaderText = "∑ Процент РН";
-            this.cPrcRn.Name = "cPrcRn";
-            this.cPrcRn.ReadOnly = true;
             // 
             // frmRNCompare
             // 

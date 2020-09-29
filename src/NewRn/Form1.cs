@@ -16,6 +16,7 @@ using Nwuram.Framework.Settings.Connection;
 using Nwuram.Framework.Logging;
 using Nwuram.Framework.Settings.User;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace NewRn
 {
@@ -953,7 +954,7 @@ namespace NewRn
             if (enabled)
                 cbShipped.Enabled = optCheckBox.Checked;
 
-            btCalc.Enabled = enabled;
+            //btCalc.Enabled = enabled;
             btSave.Enabled = false;
         }
 
@@ -1431,9 +1432,12 @@ namespace NewRn
             new frmRNCompare() { dateStart = dtpStart.Value.Date,dateStop =  dtpFinish.Value.Date }.ShowDialog();
         }
 
-        private void btSave_Click(object sender, EventArgs e)
+        private async void btSave_Click(object sender, EventArgs e)
         {
-            if (store == null) { MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование",MessageBoxButtons.OK,MessageBoxIcon.Information); return; }
+            btSave.Enabled = false;
+            var result = await Task<bool>.Factory.StartNew(() =>
+            {
+                if (store == null) { MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование",MessageBoxButtons.OK,MessageBoxIcon.Information); return false; }
 
             DataTable dtResult;
             DateTime DateStart = tmpDateStart.Date;
@@ -1457,12 +1461,13 @@ namespace NewRn
            
 
             dtResult = sql.validateTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis);
-            int id_TSaveRN = (int)dtResult.Rows[0]["id"];
+            int id_TSaveRN = -1; 
             if (dtResult != null && dtResult.Rows.Count > 0)
             {
+                id_TSaveRN = (int)dtResult.Rows[0]["id"];
                 MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные\nза расчитанный период.\nСохранить новый расчёт?\n", "Сохранение расчёта РН", MyMessageBox.MessageBoxButtons.YesNo, new List<string>(new string[] { "Да", "Нет" }));
              
-                if (msgBox.ShowDialog() == DialogResult.No) return;
+                if (msgBox.ShowDialog() == DialogResult.No) return false;
 
                 dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
             }
@@ -1472,7 +1477,7 @@ namespace NewRn
             if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
             {
                 MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
             id_TSaveRN = (int)dtResult.Rows[0]["id"];
 
@@ -1540,6 +1545,10 @@ namespace NewRn
                 }                
             }
             MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
+            });
+
+            btSave.Enabled = true;
         }
 
         private void chkRemains_CheckedChanged(object sender, EventArgs e)

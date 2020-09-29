@@ -769,7 +769,6 @@
             // btCalc
             // 
             this.btCalc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btCalc.Enabled = false;
             this.btCalc.Image = global::NewRn.Properties.Resources._11;
             this.btCalc.Location = new System.Drawing.Point(1183, 638);
             this.btCalc.Name = "btCalc";

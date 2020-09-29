@@ -129,26 +129,138 @@ namespace NewRn
             grdPrices.DataSource = view;
         }
 
+        private void setWidthColumn(int indexRow, int indexCol, int width, Nwuram.Framework.ToExcelNew.ExcelUnLoad report)
+        {
+            report.SetColumnWidth(indexRow, indexCol, indexRow, indexCol, width);
+        }
+
         private void buttonPrint_Click(object sender, EventArgs e)
         {
+            Nwuram.Framework.ToExcelNew.ExcelUnLoad report = new Nwuram.Framework.ToExcelNew.ExcelUnLoad();
 
-            if (grdPrices.DataSource != null)
-            {
+            int indexRow = 1;
 
+            int maxColumns = 0;
 
-                //Logging.StartFirstLevel(472);
-                //Logging.Comment("Выгрузка данных по товарам группы");
-                string[] filePath = (Application.StartupPath + "\\tmp").Split(new char[] { '\\' });
-
-                grdPrices.Refresh();
-                DataTable printTable = pricesTable.Copy();
-                if (stFilter != null)
+            foreach (DataGridViewColumn col in grdPrices.Columns)
+                if (col.Visible )
                 {
-                    printTable.DefaultView.RowFilter = stFilter;
+                    maxColumns++;
+                    /*if (col.Name.Equals(cDeps.Name)) setWidthColumn(indexRow, maxColumns, 18, report);
+                    if (col.Name.Equals(cPost.Name)) setWidthColumn(indexRow, maxColumns, 18, report);
+                    if (col.Name.Equals(cFIO.Name)) setWidthColumn(indexRow, maxColumns, 20, report);
+                    if (col.Name.Equals(cPass.Name)) setWidthColumn(indexRow, maxColumns, 15, report);
+                    if (col.Name.Equals(cDatePrintPass.Name)) setWidthColumn(indexRow, maxColumns, 17, report);
+                    if (col.Name.Equals(cPhone.Name)) setWidthColumn(indexRow, maxColumns, 17, report);*/
                 }
-                Print(printTable.DefaultView.ToTable(), filePath[filePath.Length - 1]);
 
+            #region "Head"
+            report.Merge(indexRow, 1, indexRow, maxColumns);
+            report.AddSingleValue($"{this.Text}", indexRow, 1);
+            report.SetFontBold(indexRow, 1, indexRow, 1);
+            report.SetFontSize(indexRow, 1, indexRow, 1, 16);
+            report.SetCellAlignmentToCenter(indexRow, 1, indexRow, 1);
+            indexRow++;
+            indexRow++;
+
+
+            //report.Merge(indexRow, 1, indexRow, maxColumns);
+            //report.AddSingleValue($"Отдел: {cmbDeps.Text}", indexRow, 1);
+            //indexRow++;
+
+            //report.Merge(indexRow, 1, indexRow, maxColumns);
+            //report.AddSingleValue($"Должность: {cmbPost.Text}", indexRow, 1);
+            //indexRow++;
+
+            //report.Merge(indexRow, 1, indexRow, maxColumns);
+            //report.AddSingleValue($"Место работы: {(rbOffice.Checked ? rbOffice.Text : rbUni.Text)}", indexRow, 1);
+            //indexRow++;
+
+            //report.Merge(indexRow, 1, indexRow, maxColumns);
+            //report.AddSingleValue($"Статус сотрудника: {(rbWork.Checked ? rbWork.Text : rbUnemploy.Text)}", indexRow, 1);
+            //indexRow++;
+
+            //if (tbPostName.Text.Trim().Length != 0 || tbKadrName.Text.Trim().Length != 0)
+            //{
+            //    report.Merge(indexRow, 1, indexRow, maxColumns);
+            //    report.AddSingleValue($"Фильтр: {(tbPostName.Text.Trim().Length != 0 ? $"Должность:{tbPostName.Text.Trim()} | " : "")} {(tbKadrName.Text.Trim().Length != 0 ? $"ФИО:{tbKadrName.Text.Trim()}" : "")}", indexRow, 1);
+            //    indexRow++;
+            //}
+
+            report.Merge(indexRow, 1, indexRow, maxColumns);
+            report.AddSingleValue("Выгрузил: " + Nwuram.Framework.Settings.User.UserSettings.User.FullUsername, indexRow, 1);
+            indexRow++;
+
+            report.Merge(indexRow, 1, indexRow, maxColumns);
+            report.AddSingleValue("Дата выгрузки: " + DateTime.Now.ToString(), indexRow, 1);
+            indexRow++;
+            indexRow++;
+            #endregion
+
+            int indexCol = 0;
+            foreach (DataGridViewColumn col in grdPrices.Columns)
+                if (col.Visible )
+                {
+                    indexCol++;
+                    report.AddSingleValue(col.HeaderText, indexRow, indexCol);
+                }
+            report.SetFontBold(indexRow, 1, indexRow, maxColumns);
+            report.SetBorders(indexRow, 1, indexRow, maxColumns);
+            report.SetCellAlignmentToCenter(indexRow, 1, indexRow, maxColumns);
+            report.SetCellAlignmentToJustify(indexRow, 1, indexRow, maxColumns);
+            report.SetWrapText(indexRow, 1, indexRow, maxColumns);
+            indexRow++;
+
+            foreach (DataRowView row in pricesTable.DefaultView)
+            {
+                indexCol = 1;
+                report.SetWrapText(indexRow, indexCol, indexRow, maxColumns);
+                foreach (DataGridViewColumn col in grdPrices.Columns)
+                {
+                    if (col.Visible )
+                    {
+                        if (row[col.DataPropertyName] is DateTime)
+                            report.AddSingleValue(((DateTime)row[col.DataPropertyName]).ToShortDateString(), indexRow, indexCol);
+                        else
+                           if (row[col.DataPropertyName] is decimal || row[col.DataPropertyName] is double)
+                        {
+                            report.AddSingleValueObject(row[col.DataPropertyName], indexRow, indexCol);
+                            report.SetFormat(indexRow, indexCol, indexRow, indexCol, "0.00");
+                        }
+                        else
+                            report.AddSingleValue(row[col.DataPropertyName].ToString(), indexRow, indexCol);
+
+                        indexCol++;
+                    }
+                }
+
+                report.SetBorders(indexRow, 1, indexRow, maxColumns);
+                report.SetCellAlignmentToCenter(indexRow, 1, indexRow, maxColumns);
+                report.SetCellAlignmentToJustify(indexRow, 1, indexRow, maxColumns);
+
+                indexRow++;
             }
+            report.SetColumnAutoSize(6, 1, indexRow, maxColumns);
+            report.Show();
+
+
+            //if (grdPrices.DataSource != null)
+            //{
+
+
+            //    //Logging.StartFirstLevel(472);
+            //    //Logging.Comment("Выгрузка данных по товарам группы");
+            //    string[] filePath = (Application.StartupPath + "\\tmp").Split(new char[] { '\\' });
+
+            //    grdPrices.Refresh();
+            //    DataTable printTable = pricesTable.Copy();
+            //    if (stFilter != null)
+            //    {
+            //        printTable.DefaultView.RowFilter = stFilter;
+            //    }
+            //    Print(printTable.DefaultView.ToTable(), filePath[filePath.Length - 1]);
+
+            //}
         }
 
         private string GetColumnSum(DataTable prices, string columnName)
