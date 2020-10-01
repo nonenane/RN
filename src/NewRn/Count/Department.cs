@@ -651,7 +651,7 @@ namespace NewRn
             table.Columns.Add("id_grp1");
             table.Columns.Add("id_grp2");
             table.Columns.Add("id_otdel", typeof(int));
-            table.Columns.Add("id_tovar", typeof(int));
+            table.Columns.Add("id", typeof(int));
             table.Columns.Add("procent", typeof(decimal));
 
 
@@ -703,7 +703,7 @@ namespace NewRn
                 goodRow["id_grp1"] = groupRow["id_grp1"];
                 goodRow["id_grp2"] = groupRow["id_grp2"];
                 goodRow["id_otdel"] = groupRow["id_otdel"];
-                goodRow["id_tovar"] = groupRow["id"];
+                goodRow["id"] = groupRow["id"];
                 goodRow["procent"] = groupRow["procent"];
 
                 if (Config.isCompareData)
@@ -739,6 +739,13 @@ namespace NewRn
                 goodRow["rn"] = groupRow["rn"];
                 goodRow["r1"] = groupRow["r1"];
                 goodRow["r2"] = groupRow["r2"];
+
+                goodRow["id_grp1"] = groupRow["id_grp1"];
+                goodRow["id_grp2"] = groupRow["id_grp2"];
+                goodRow["id_otdel"] = groupRow["id_otdel"];
+                goodRow["id"] = groupRow["id"];
+                goodRow["procent"] = groupRow["procent"];
+
                 if (Config.isCompareData)
                 {
                     goodRow["notValidate"] = groupRow["notValidate"];

@@ -10,6 +10,7 @@ using Microsoft.VisualBasic;
 using Nwuram.Framework.Data;
 using Nwuram.Framework.Settings.Connection;
 using Nwuram.Framework.Settings.User;
+using System.Threading.Tasks;
 
 namespace NewRn.Data
 {
@@ -586,5 +587,16 @@ namespace NewRn.Data
                 new DbType[] { DbType.Int32 }, ap);            
         }
 
+        public  async Task<DataTable> getTSaveRN(DateTime dateStart,DateTime dateEnd)
+        {
+            ap.Clear();
+            ap.Add(dateStart);
+            ap.Add(dateEnd);
+
+
+            return sql.executeProcedure("[CountRN].[spg_getTSaveRN]",
+                new string[2] { "@dateStart", "@dateEnd" },
+                new DbType[2] { DbType.Date,DbType.Date }, ap);
+        }
     }
 }

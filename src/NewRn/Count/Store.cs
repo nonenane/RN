@@ -167,7 +167,8 @@ namespace NewRn
                 remainStart += dep.R1;
                 remainFinish += dep.R2;
 
-                Notify();
+                if (Notify != null)
+                    Notify();
             }
             prihodStart.Dispose();
             prihodFinish.Dispose();

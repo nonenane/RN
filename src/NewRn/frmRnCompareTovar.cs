@@ -41,7 +41,10 @@ namespace NewRn
             DataTable dtRN = null;
             try
             {
-                dtRN = Config.dtDaveRN.AsEnumerable().Where(r => r.Field<int>("id_department") == id_otdel && r.Field<int>("id_grp1") == id_group).CopyToDataTable();
+                if (id_otdel != 0 & id_group != 0)
+                    dtRN = Config.dtDaveRN.AsEnumerable().Where(r => r.Field<int>("id_department") == id_otdel && r.Field<int>("id_grp1") == id_group).CopyToDataTable();
+                else
+                    dtRN = Config.dtDaveRN.Copy();
             }
             catch (Exception ex) { }
 
@@ -70,69 +73,119 @@ namespace NewRn
             {
                 foreach (DataRow row in dtTovarCalculation.Rows)
                 {
-                    DataRow cloneRow = dtData.NewRow();
-                    cloneRow.ItemArray = row.ItemArray.Clone() as object[];
-                    EnumerableRowCollection<DataRow> rowCollect = dtRN.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"]);
-                    if (rowCollect.Count() > 0)
+                    try
                     {
-                        cloneRow["r1"] = rowCollect.First()["RestStart"];
-                        cloneRow["r2"] = rowCollect.First()["RestStop"];
-                        cloneRow["prihod"] = rowCollect.First()["PrihodSum"];
-                        cloneRow["otgruz"] = rowCollect.First()["OtgruzSum"];
-                        cloneRow["vozvr"] = rowCollect.First()["VozvrSum"];
-                        cloneRow["spis"] = rowCollect.First()["SpisSum"];
-                        cloneRow["spis_inv"] = rowCollect.First()["InventSpisSum"];
-                        cloneRow["realiz"] = rowCollect.First()["RealizSum"];
-                        cloneRow["realiz_opt"] = rowCollect.First()["OtgruzOptSum"];
-                        cloneRow["vozvkass"] = rowCollect.First()["VozvrKassSum"];
-                        cloneRow["nameType"] = "сохраненные";
-                        cloneRow["idType"] = 2;
-                        cloneRow["isError"] = false;
-
-                        cloneRow["prihod_all"] = (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["OtgruzSum"] - (decimal)rowCollect.First()["VozvrSum"] - (decimal)rowCollect.First()["SpisSum"] - (decimal)rowCollect.First()["OtgruzOptSum"];
-
-                        cloneRow["realiz_all"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"];
-
-                        cloneRow["rn"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"];
-
-
-                        if ((double)cloneRow["rn"] == 0 || (double)cloneRow["realiz_all"] == 0)
-                            cloneRow["procent"] = (decimal)0;
-                        else
-                            cloneRow["procent"] = Math.Round((((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"]) / ((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"])) * 100,2);
-                        //cloneRow["procent"] = ((decimal)cloneRow["rn"] / (decimal)cloneRow["realiz_all"]) * 100;
-
-
-                        EnumerableRowCollection<DataRow> rowCollectType2 = dtData.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"] && r.Field<int>("idType") == 1);
-                        DataRow rowType2 = rowCollectType2.First();
-                        if (
-                        (double)cloneRow["r1"] != (double)rowType2["r1"] ||
-                        (double)cloneRow["r2"] != (double)rowType2["r2"] ||
-                        (double)cloneRow["prihod"] != (double)rowType2["prihod"] ||
-                        (double)cloneRow["otgruz"] != (double)rowType2["otgruz"] ||
-                        (double)cloneRow["vozvr"] != (double)rowType2["vozvr"] ||
-                        (double)cloneRow["spis"] != (double)rowType2["spis"] ||
-                        (double)cloneRow["spis_inv"] != (double)rowType2["spis_inv"] ||
-                        (double)cloneRow["realiz"] != (double)rowType2["realiz"] ||
-                        (double)cloneRow["realiz_opt"] != (double)rowType2["realiz_opt"] ||
-                        (double)cloneRow["vozvkass"] != (double)rowType2["vozvkass"] ||
-                        (double)cloneRow["prihod_all"] != (double)rowType2["prihod_all"] ||
-                        (double)cloneRow["realiz_all"] != (double)rowType2["realiz_all"] ||
-                        (double)cloneRow["rn"] != (double)rowType2["rn"] ||
-                        (decimal)cloneRow["procent"] != (decimal)rowType2["procent"])
+                        DataRow cloneRow = dtData.NewRow();
+                        cloneRow.ItemArray = row.ItemArray.Clone() as object[];
+                        EnumerableRowCollection<DataRow> rowCollect;
+                        int id = 0;
+                        if (dtTovarCalculation.Columns["id"].DataType ==typeof(int))
                         {
-                            rowType2["isError"] = true;
-                            cloneRow["isError"] = true;
+                            id = (int)row["id"];
+                            rowCollect = dtRN.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id"] && r.Field<int>("id_department")==(int)row["id_otdel"]);
+                        }
+                        else
+                        {
+                            id = int.Parse((string)row["id"]);
+                            rowCollect = dtRN.AsEnumerable().Where(r => r.Field<int>("id_tovar") == id && r.Field<int>("id_department") == (int)row["id_otdel"]);
                         }
 
-                        //cloneRow[""] = rowCollect.First()[""];
-                        //cloneRow[""] = rowCollect.First()[""];
-                        dtData.Rows.Add(cloneRow);
+                        //if (((string)row["ean"]).Trim().Equals("46078490"))
+                        //    { }
+
+                        if (rowCollect.Count() > 0)
+                        {
+                            cloneRow["r1"] = rowCollect.First()["RestStart"];
+                            cloneRow["r2"] = rowCollect.First()["RestStop"];
+                            cloneRow["prihod"] = rowCollect.First()["PrihodSum"];
+                            cloneRow["otgruz"] = rowCollect.First()["OtgruzSum"];
+                            cloneRow["vozvr"] = rowCollect.First()["VozvrSum"];
+                            cloneRow["spis"] = rowCollect.First()["SpisSum"];
+                            cloneRow["spis_inv"] = rowCollect.First()["InventSpisSum"];
+                            cloneRow["realiz"] = rowCollect.First()["RealizSum"];
+                            cloneRow["realiz_opt"] = rowCollect.First()["OtgruzOptSum"];
+                            cloneRow["vozvkass"] = rowCollect.First()["VozvrKassSum"];
+                            cloneRow["nameType"] = "сохраненные";
+                            cloneRow["idType"] = 2;
+                            cloneRow["isError"] = false;
+
+                            cloneRow["prihod_all"] = (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["OtgruzSum"] - (decimal)rowCollect.First()["VozvrSum"] - (decimal)rowCollect.First()["SpisSum"] - (decimal)rowCollect.First()["OtgruzOptSum"];
+
+                            cloneRow["realiz_all"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"];
+
+                            cloneRow["rn"] = (decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"];
+
+
+                            if ((double)cloneRow["rn"] == 0 || (double)cloneRow["realiz_all"] == 0)
+                                cloneRow["procent"] = (decimal)0;
+                            else
+                                cloneRow["procent"] = Math.Round((((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["PrihodSum"] - (decimal)rowCollect.First()["RestStart"] + (decimal)rowCollect.First()["RestStop"]) / ((decimal)rowCollect.First()["RealizSum"] - (decimal)rowCollect.First()["VozvrKassSum"])) * 100, 2);
+                            //cloneRow["procent"] = ((decimal)cloneRow["rn"] / (decimal)cloneRow["realiz_all"]) * 100;
+
+
+                            EnumerableRowCollection<DataRow> rowCollectType2;
+                            if (dtTovarCalculation.Columns["id"].DataType == typeof(int))
+                            {
+                                rowCollectType2 = dtData.AsEnumerable().Where(r => r.Field<int>("id") == id && r.Field<int>("idType") == 1 && r.Field<int>("id_otdel") == (int)row["id_otdel"]);
+
+                                DataRow rowType2 = rowCollectType2.First();
+                                if (
+                                (double)cloneRow["r1"] != (double)rowType2["r1"] ||
+                                (double)cloneRow["r2"] != (double)rowType2["r2"] ||
+                                (double)cloneRow["prihod"] != (double)rowType2["prihod"] ||
+                                (double)cloneRow["otgruz"] != (double)rowType2["otgruz"] ||
+                                (double)cloneRow["vozvr"] != (double)rowType2["vozvr"] ||
+                                (double)cloneRow["spis"] != (double)rowType2["spis"] ||
+                                (double)cloneRow["spis_inv"] != (double)rowType2["spis_inv"] ||
+                                (double)cloneRow["realiz"] != (double)rowType2["realiz"] ||
+                                (double)cloneRow["realiz_opt"] != (double)rowType2["realiz_opt"] ||
+                                (double)cloneRow["vozvkass"] != (double)rowType2["vozvkass"] ||
+                                (double)cloneRow["prihod_all"] != (double)rowType2["prihod_all"] ||
+                                (double)cloneRow["realiz_all"] != (double)rowType2["realiz_all"] ||
+                                (double)cloneRow["rn"] != (double)rowType2["rn"] ||
+                                (decimal)cloneRow["procent"] != (decimal)rowType2["procent"])
+                                {
+                                    rowType2["isError"] = true;
+                                    cloneRow["isError"] = true;
+                                }
+                            }
+                            else
+                            {
+                                rowCollectType2 = dtData.AsEnumerable().Where(r => int.Parse(r.Field<string>("id")) == id && r.Field<int>("idType") == 1 && r.Field<int>("id_otdel") == (int)row["id_otdel"]);
+
+                                DataRow rowType2 = rowCollectType2.First();
+                                if (
+                                (double)cloneRow["r1"] != (double)rowType2["r1"] ||
+                                (double)cloneRow["r2"] != (double)rowType2["r2"] ||
+                                (double)cloneRow["prihod"] != (double)rowType2["prihod"] ||
+                                (double)cloneRow["otgruz"] != (double)rowType2["otgruz"] ||
+                                (double)cloneRow["vozvr"] != (double)rowType2["vozvr"] ||
+                                (double)cloneRow["spis"] != (double)rowType2["spis"] ||
+                                (double)cloneRow["spis_inv"] != (double)rowType2["spis_inv"] ||
+                                (double)cloneRow["realiz"] != (double)rowType2["realiz"] ||
+                                (double)cloneRow["realiz_opt"] != (double)rowType2["realiz_opt"] ||
+                                (double)cloneRow["vozvkass"] != (double)rowType2["vozvkass"] ||
+                                (double)cloneRow["prihod_all"] != (double)rowType2["prihod_all"] ||
+                                (double)cloneRow["realiz_all"] != (double)rowType2["realiz_all"] ||
+                                (double)cloneRow["rn"] != (double)rowType2["rn"] ||
+                                (double)cloneRow["procent"] != (double)rowType2["procent"])
+                                {
+                                    rowType2["isError"] = true;
+                                    cloneRow["isError"] = true;
+                                }
+                            }
+                            //cloneRow[""] = rowCollect.First()[""];
+                            //cloneRow[""] = rowCollect.First()[""];
+                            dtData.Rows.Add(cloneRow);
+                        }
+
+                        //rowCollect = dtData.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"] && r.Field<int>("idType")==1);
+
                     }
-
-                    //rowCollect = dtData.AsEnumerable().Where(r => r.Field<int>("id_tovar") == (int)row["id_tovar"] && r.Field<int>("idType")==1);
-                   
-
+                    catch (Exception ex)
+                    { 
+                    
+                    }
                 }
 
                 /*
@@ -242,7 +295,7 @@ namespace NewRn
                     filter += (filter.Length == 0 ? "" : " and ") + $"id_grp2 = {cmbGrp2.SelectedValue}";
 
                 dtData.DefaultView.RowFilter = filter;
-                dtData.DefaultView.Sort = "id_tovar asc ";
+                dtData.DefaultView.Sort = "id_otdel asc, id asc ";
             }
             catch
             {
