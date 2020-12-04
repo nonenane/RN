@@ -39,6 +39,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btGetData = new System.Windows.Forms.Button();
             this.dgvData = new System.Windows.Forms.DataGridView();
+            this.cPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cTypeCalc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cOstStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cPrihod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cRealiz = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cOstEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cRN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cPrcRn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btClose = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -52,14 +60,7 @@
             this.tbFio = new System.Windows.Forms.TextBox();
             this.dtpEnd = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
-            this.cPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cTypeCalc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cOstStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cPrihod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cRealiz = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cOstEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cRN = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cPrcRn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -132,6 +133,75 @@
             this.dgvData.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgvData_RowPostPaint);
             this.dgvData.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvData_RowPrePaint);
             this.dgvData.SelectionChanged += new System.EventHandler(this.dgvData_SelectionChanged);
+            // 
+            // cPeriod
+            // 
+            this.cPeriod.DataPropertyName = "namePeriod";
+            this.cPeriod.HeaderText = "Период расчета";
+            this.cPeriod.Name = "cPeriod";
+            this.cPeriod.ReadOnly = true;
+            // 
+            // cTypeCalc
+            // 
+            this.cTypeCalc.DataPropertyName = "typeCalc";
+            this.cTypeCalc.HeaderText = "Тип расчета";
+            this.cTypeCalc.Name = "cTypeCalc";
+            this.cTypeCalc.ReadOnly = true;
+            // 
+            // cOstStart
+            // 
+            this.cOstStart.DataPropertyName = "TotalRestStart";
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.cOstStart.DefaultCellStyle = dataGridViewCellStyle2;
+            this.cOstStart.HeaderText = "∑ Остаток на начало";
+            this.cOstStart.Name = "cOstStart";
+            this.cOstStart.ReadOnly = true;
+            // 
+            // cPrihod
+            // 
+            this.cPrihod.DataPropertyName = "TotalPrihod";
+            dataGridViewCellStyle3.Format = "N2";
+            this.cPrihod.DefaultCellStyle = dataGridViewCellStyle3;
+            this.cPrihod.HeaderText = "∑ Приход";
+            this.cPrihod.Name = "cPrihod";
+            this.cPrihod.ReadOnly = true;
+            // 
+            // cRealiz
+            // 
+            this.cRealiz.DataPropertyName = "TotalRealiz";
+            dataGridViewCellStyle4.Format = "N2";
+            this.cRealiz.DefaultCellStyle = dataGridViewCellStyle4;
+            this.cRealiz.HeaderText = "∑ Реализация";
+            this.cRealiz.Name = "cRealiz";
+            this.cRealiz.ReadOnly = true;
+            // 
+            // cOstEnd
+            // 
+            this.cOstEnd.DataPropertyName = "TotalRestStop";
+            dataGridViewCellStyle5.Format = "N2";
+            this.cOstEnd.DefaultCellStyle = dataGridViewCellStyle5;
+            this.cOstEnd.HeaderText = "∑ Остаток на конец";
+            this.cOstEnd.Name = "cOstEnd";
+            this.cOstEnd.ReadOnly = true;
+            // 
+            // cRN
+            // 
+            this.cRN.DataPropertyName = "TotalRN";
+            dataGridViewCellStyle6.Format = "N2";
+            this.cRN.DefaultCellStyle = dataGridViewCellStyle6;
+            this.cRN.HeaderText = "∑ РН";
+            this.cRN.Name = "cRN";
+            this.cRN.ReadOnly = true;
+            // 
+            // cPrcRn
+            // 
+            this.cPrcRn.DataPropertyName = "TotalPercentRN";
+            dataGridViewCellStyle7.Format = "N2";
+            this.cPrcRn.DefaultCellStyle = dataGridViewCellStyle7;
+            this.cPrcRn.HeaderText = "∑ Процент РН";
+            this.cPrcRn.Name = "cPrcRn";
+            this.cPrcRn.ReadOnly = true;
             // 
             // btClose
             // 
@@ -272,80 +342,22 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "по";
             // 
-            // cPeriod
+            // progressBar1
             // 
-            this.cPeriod.DataPropertyName = "namePeriod";
-            this.cPeriod.HeaderText = "Период расчета";
-            this.cPeriod.Name = "cPeriod";
-            this.cPeriod.ReadOnly = true;
-            // 
-            // cTypeCalc
-            // 
-            this.cTypeCalc.DataPropertyName = "typeCalc";
-            this.cTypeCalc.HeaderText = "Тип расчета";
-            this.cTypeCalc.Name = "cTypeCalc";
-            this.cTypeCalc.ReadOnly = true;
-            // 
-            // cOstStart
-            // 
-            this.cOstStart.DataPropertyName = "TotalRestStart";
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.cOstStart.DefaultCellStyle = dataGridViewCellStyle2;
-            this.cOstStart.HeaderText = "∑ Остаток на начало";
-            this.cOstStart.Name = "cOstStart";
-            this.cOstStart.ReadOnly = true;
-            // 
-            // cPrihod
-            // 
-            this.cPrihod.DataPropertyName = "TotalPrihod";
-            dataGridViewCellStyle3.Format = "N2";
-            this.cPrihod.DefaultCellStyle = dataGridViewCellStyle3;
-            this.cPrihod.HeaderText = "∑ Приход";
-            this.cPrihod.Name = "cPrihod";
-            this.cPrihod.ReadOnly = true;
-            // 
-            // cRealiz
-            // 
-            this.cRealiz.DataPropertyName = "TotalRealiz";
-            dataGridViewCellStyle4.Format = "N2";
-            this.cRealiz.DefaultCellStyle = dataGridViewCellStyle4;
-            this.cRealiz.HeaderText = "∑ Реализация";
-            this.cRealiz.Name = "cRealiz";
-            this.cRealiz.ReadOnly = true;
-            // 
-            // cOstEnd
-            // 
-            this.cOstEnd.DataPropertyName = "TotalRestStop";
-            dataGridViewCellStyle5.Format = "N2";
-            this.cOstEnd.DefaultCellStyle = dataGridViewCellStyle5;
-            this.cOstEnd.HeaderText = "∑ Остаток на конец";
-            this.cOstEnd.Name = "cOstEnd";
-            this.cOstEnd.ReadOnly = true;
-            // 
-            // cRN
-            // 
-            this.cRN.DataPropertyName = "TotalRN";
-            dataGridViewCellStyle6.Format = "N2";
-            this.cRN.DefaultCellStyle = dataGridViewCellStyle6;
-            this.cRN.HeaderText = "∑ РН";
-            this.cRN.Name = "cRN";
-            this.cRN.ReadOnly = true;
-            // 
-            // cPrcRn
-            // 
-            this.cPrcRn.DataPropertyName = "TotalPercentRN";
-            dataGridViewCellStyle7.Format = "N2";
-            this.cPrcRn.DefaultCellStyle = dataGridViewCellStyle7;
-            this.cPrcRn.HeaderText = "∑ Процент РН";
-            this.cPrcRn.Name = "cPrcRn";
-            this.cPrcRn.ReadOnly = true;
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(810, 11);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(281, 24);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 19;
+            this.progressBar1.Visible = false;
             // 
             // frmRNCompare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1103, 567);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox1);
@@ -398,5 +410,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cOstEnd;
         private System.Windows.Forms.DataGridViewTextBoxColumn cRN;
         private System.Windows.Forms.DataGridViewTextBoxColumn cPrcRn;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

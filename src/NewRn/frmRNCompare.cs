@@ -18,6 +18,7 @@ namespace NewRn
         private Sql sql = null;
         private Sql sqlVVO = null;
         private DataTable dtData;
+        private Nwuram.Framework.UI.Service.EnableControlsServiceInProg blockers = new Nwuram.Framework.UI.Service.EnableControlsServiceInProg();
 
         public DateTime dateStart { set; private get; }
         public DateTime dateStop { set; private get; }
@@ -64,19 +65,25 @@ namespace NewRn
         {
             try
             {
-                btGetData.Enabled = false;
+                dicListData.Clear();
+                DateTime dateStart = dtpStart.Value.Date;
+                DateTime dateEnd = dtpEnd.Value.Date;
+                blockers.SaveControlsEnabledState(this);
+                blockers.SetControlsEnabled(this, false);
+                progressBar1.Visible = true;
+
+                //btGetData.Enabled = false;
                 var result = await Task<bool>.Factory.StartNew(() =>
                 {
-                    dicListData.Clear();
-                    DateTime dateStart = dtpStart.Value.Date;
-                    DateTime dateEnd = dtpEnd.Value.Date;
-
+                    
                     Task<DataTable> task = sql.getTSaveRN(dateStart, dateEnd);
                     task.Wait();
 
                     if (task.Result == null || task.Result.Rows.Count == 0)
                     {
-                        MessageBox.Show("За указанный период отсутствуют ранее сохранённые данные.\nРасчёт не может быть произведён\n", "Проверка наличия сохранённых данных.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(Config.centralText("За указанный период отсутствуют\n ранее сохранённые данные.\nРасчёт не может быть произведён\n"), "Проверка наличия сохранённых данных.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        blockers.RestoreControlEnabledState(this);
+                        progressBar1.Visible = false;
                         dtData = null;
                         return false;
                     }
@@ -123,12 +130,12 @@ namespace NewRn
                         EnumerableRowCollection<DataRow> rowCollectType2 = dtData.AsEnumerable().Where(r => r.Field<int>("id") == id);
                         DataRow rowType2 = rowCollectType2.First();
                         if (
-                        (decimal)newRow["TotalPrihod"] != (decimal)rowType2["TotalPrihod"] ||
-                        (decimal)newRow["TotalRealiz"] != (decimal)rowType2["TotalRealiz"] ||
-                        (decimal)newRow["TotalRestStart"] != (decimal)rowType2["TotalRestStart"] ||
-                        (decimal)newRow["TotalRestStop"] != (decimal)rowType2["TotalRestStop"] ||
-                        (decimal)newRow["TotalRN"] != (decimal)rowType2["TotalRN"] ||
-                        (decimal)newRow["TotalPercentRN"] != (decimal)rowType2["TotalPercentRN"])
+                        Math.Round((decimal)newRow["TotalPrihod"],2) != Math.Round((decimal)rowType2["TotalPrihod"], 2) ||
+                        Math.Round((decimal)newRow["TotalRealiz"], 2) != Math.Round((decimal)rowType2["TotalRealiz"], 2) ||
+                        Math.Round((decimal)newRow["TotalRestStart"], 2) != Math.Round((decimal)rowType2["TotalRestStart"], 2) ||
+                        Math.Round((decimal)newRow["TotalRestStop"], 2) != Math.Round((decimal)rowType2["TotalRestStop"], 2) ||
+                        Math.Round((decimal)newRow["TotalRN"], 2) != Math.Round((decimal)rowType2["TotalRN"], 2) ||
+                        Math.Round((decimal)newRow["TotalPercentRN"], 2) != Math.Round((decimal)rowType2["TotalPercentRN"], 2))
                         {
                             rowType2["isError"] = true;
                             newRow["isError"] = true;
@@ -146,16 +153,25 @@ namespace NewRn
                     }
                     dtData.DefaultView.Sort = "id asc";
                     dtData = dtData.DefaultView.ToTable().Copy();
+
+                    Config.DoOnUIThread(() =>
+                    {
+                        blockers.RestoreControlEnabledState(this);
+                        progressBar1.Visible = false;                        
+                    }, this);
+
                     return true;
                 });
             }
             catch (Exception ex)
             {
+                blockers.RestoreControlEnabledState(this);
+                progressBar1.Visible = false;
             }
             finally
             {
                 dgvData.DataSource = dtData;
-                btGetData.Enabled = true;
+                //btGetData.Enabled = true;
             }
         }
 
@@ -237,7 +253,7 @@ namespace NewRn
 
 
                 if (checkBox1.Checked)
-                    filter += (filter.Length == 0 ? "" : " and ") + $"isError = -1";
+                    filter += (filter.Length == 0 ? "" : " and ") + $"isError = true";
 
                 dtData.DefaultView.RowFilter = filter;
                 dtData.DefaultView.Sort = "id asc ";

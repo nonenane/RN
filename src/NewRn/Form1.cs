@@ -954,6 +954,7 @@ namespace NewRn
             if (enabled)
                 cbShipped.Enabled = optCheckBox.Checked;
 
+            btCalc.Enabled = enabled;
             //btCalc.Enabled = enabled;
             btSave.Enabled = false;
         }
@@ -1088,9 +1089,12 @@ namespace NewRn
             {
                 FillExcelTemplate fet = new FillExcelTemplate();
 
+                DataTable dtTooRep = prices.Copy();
+                if (dtTooRep.Columns.Contains("notValidate")) dtTooRep.Columns.Remove("notValidate");
+
                 for (int i = 0; i < valueNames.Length; ++i)
                     fet.AddItemSingleList(valueNames[i], values[i].ToString());
-                fet.AddMultiList(prices, "rn");
+                fet.AddMultiList(dtTooRep, "rn");
 
                 //выгружаем в Excel
                 try
@@ -1435,120 +1439,147 @@ namespace NewRn
         private async void btSave_Click(object sender, EventArgs e)
         {
             btSave.Enabled = false;
+            SetControlsEnable(false);
             var result = await Task<bool>.Factory.StartNew(() =>
             {
-                if (store == null) { MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование",MessageBoxButtons.OK,MessageBoxIcon.Information); return false; }
-
-            DataTable dtResult;
-            DateTime DateStart = tmpDateStart.Date;
-            DateTime DateEnd = tmpDateStop.Date;
-            
-            bool isOptOtgruz = isOptCheckBox;
-            bool isOnlyShipped = isShipped;
-            bool isInventorySpis = isWithInvSpis;
-
-            decimal TotalPrihod = store.PrihodAll;
-            decimal TotalRealiz = store.RealizAll;
-            decimal TotalRestStart = store.RemainStart;
-            decimal TotalRestStop = store.RemainFinish;
-            decimal TotalRN = store.RN;
-            decimal TotalPercentRN = store.Procent;
-
-            //Тут сохраняем заголовок
-
-            
-
-           
-
-            dtResult = sql.validateTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis);
-            int id_TSaveRN = -1; 
-            if (dtResult != null && dtResult.Rows.Count > 0)
-            {
-                id_TSaveRN = (int)dtResult.Rows[0]["id"];
-                MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные\nза расчитанный период.\nСохранить новый расчёт?\n", "Сохранение расчёта РН", MyMessageBox.MessageBoxButtons.YesNo, new List<string>(new string[] { "Да", "Нет" }));
-             
-                if (msgBox.ShowDialog() == DialogResult.No) return false;
-
-                dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
-            }
-
-            dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
-
-            if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
-            {
-                MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            id_TSaveRN = (int)dtResult.Rows[0]["id"];
-
-            DataTable dtDeps = sql.getDepartments(true);
-
-            //foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
-            foreach (DataRow row in dtDeps.Rows)
-            {
-                if ((Int16)row["id"] == -1) continue;
-
-                Department dep = store.GetDepartment((Int16)row["id"]);
-
-                foreach (DataRow rowGoods in dep.GetAllGoods().Rows)
+                if (store == null)
                 {
-                    int id_tovar = int.Parse(rowGoods["id"].ToString());
-                    int id_grp1 = int.Parse(rowGoods["id_grp1"].ToString());
-                    int id_grp2 = int.Parse(rowGoods["id_grp2"].ToString());
-                    int id_otdel = (int)rowGoods["id_otdel"];
-                    decimal RestStart = decimal.Parse( rowGoods["r1"].ToString());
-                    decimal RestStop = decimal.Parse(rowGoods["r2"].ToString());
-
-                    decimal PrihodSum = decimal.Parse(rowGoods["prihod"].ToString());
-                    decimal OtgruzSum = decimal.Parse(rowGoods["otgruz"].ToString());
-                    decimal VozvrSum = decimal.Parse(rowGoods["vozvr"].ToString());
-                    decimal SpisSum = decimal.Parse(rowGoods["spis"].ToString());
-                    decimal InventSpisSum = decimal.Parse(rowGoods["spis_inv"].ToString());
-                    decimal RealizSum = decimal.Parse(rowGoods["realiz"].ToString());
-                    decimal OtgruzOptSum = decimal.Parse(rowGoods["realiz_opt"].ToString());
-                    decimal VozvrKassSum = decimal.Parse(rowGoods["vozvkass"].ToString());
-                    //Тут сохраняем тело
-
-                    if (id_otdel != 6)
-                        dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
-                    else
-                        dtResult = sqlVVO.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
-                    
-
-                    decimal RestStartSum = 0;
-                    decimal RestStopSum = 0;
-                    decimal Prihod = 0;
-                    decimal Otgruz = 0;
-                    decimal Vozvr = 0;
-                    decimal Spis = 0;
-                    decimal VozvrKass = 0;
-                    decimal Realiz = 0;
-                    decimal InventSpis = 0;
-                    decimal OtgruzOpt = 0;
-
-                    if (dtResult != null && dtResult.Rows.Count > 0)
+                    MessageBox.Show("Ну вот нечего записывать в базу!", "Информирование", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Config.DoOnUIThread(() =>
                     {
-                        RestStartSum = (decimal)dtResult.Rows[0]["RestStartSum"];
-                        RestStopSum = (decimal)dtResult.Rows[0]["RestStopSum"];
-                        Prihod = (decimal)dtResult.Rows[0]["Prihod"];
-                        Otgruz = (decimal)dtResult.Rows[0]["Otgruz"];
-                        Vozvr = (decimal)dtResult.Rows[0]["Vozvr"];
-                        Spis = (decimal)dtResult.Rows[0]["Spis"];
-                        VozvrKass = (decimal)dtResult.Rows[0]["VozvrKass"];
-                        Realiz = (decimal)dtResult.Rows[0]["Realiz"];
-                        InventSpis = (decimal)dtResult.Rows[0]["InventSpis"];
-                        OtgruzOpt = (decimal)dtResult.Rows[0]["OtgruzOpt"];
+                        SetControlsEnable(true);
+                        btSave.Enabled = true;
+                    }, this);
+                    return false;
+                }
+
+                DataTable dtResult;
+                DateTime DateStart = tmpDateStart.Date;
+                DateTime DateEnd = tmpDateStop.Date;
+
+                bool isOptOtgruz = isOptCheckBox;
+                bool isOnlyShipped = isShipped;
+                bool isInventorySpis = isWithInvSpis;
+
+                decimal TotalPrihod = store.PrihodAll;
+                decimal TotalRealiz = store.RealizAll;
+                decimal TotalRestStart = store.RemainStart;
+                decimal TotalRestStop = store.RemainFinish;
+                decimal TotalRN = store.RN;
+                decimal TotalPercentRN = store.Procent;
+
+                //Тут сохраняем заголовок
+
+
+
+
+
+                dtResult = sql.validateTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis);
+                int id_TSaveRN = -1;
+                if (dtResult != null && dtResult.Rows.Count > 0)
+                {
+                    id_TSaveRN = (int)dtResult.Rows[0]["id"];
+                    MyMessageBox.MyMessageBox msgBox = new MyMessageBox.MyMessageBox("В базе данных присутствуют данные\nза расчитанный период.\nСохранить новый расчёт?\n", "Сохранение расчёта РН", MyMessageBox.MessageBoxButtons.YesNo, new List<string>(new string[] { "Да", "Нет" }));
+
+                    if (msgBox.ShowDialog() == DialogResult.No)
+                    {
+                        Config.DoOnUIThread(() =>
+                        {
+                            SetControlsEnable(true);
+                            //btSave.Enabled = true;
+                        }, this);
+                        return false;
                     }
 
-                    dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, false);
+                    dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
+                }
 
-                }                
-            }
-            MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
+
+                if (dtResult == null || dtResult.Rows.Count == 0 || (int)dtResult.Rows[0]["id"] < 0)
+                {
+                    MessageBox.Show("Ошибка сохранения заголовка!", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Config.DoOnUIThread(() =>
+                    {
+                        SetControlsEnable(true);
+                        //btSave.Enabled = true;
+                    }, this);
+                    return false;
+                }
+
+                id_TSaveRN = (int)dtResult.Rows[0]["id"];
+
+                DataTable dtDeps = sql.getDepartments(true);
+
+                //foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
+                foreach (DataRow row in dtDeps.Rows)
+                {
+                    if ((Int16)row["id"] == -1) continue;
+
+                    Department dep = store.GetDepartment((Int16)row["id"]);
+
+                    foreach (DataRow rowGoods in dep.GetAllGoods().Rows)
+                    {
+                        int id_tovar = int.Parse(rowGoods["id"].ToString());
+                        int id_grp1 = int.Parse(rowGoods["id_grp1"].ToString());
+                        int id_grp2 = int.Parse(rowGoods["id_grp2"].ToString());
+                        int id_otdel = (int)rowGoods["id_otdel"];
+                        decimal RestStart = decimal.Parse(rowGoods["r1"].ToString());
+                        decimal RestStop = decimal.Parse(rowGoods["r2"].ToString());
+
+                        decimal PrihodSum = decimal.Parse(rowGoods["prihod"].ToString());
+                        decimal OtgruzSum = decimal.Parse(rowGoods["otgruz"].ToString());
+                        decimal VozvrSum = decimal.Parse(rowGoods["vozvr"].ToString());
+                        decimal SpisSum = decimal.Parse(rowGoods["spis"].ToString());
+                        decimal InventSpisSum = decimal.Parse(rowGoods["spis_inv"].ToString());
+                        decimal RealizSum = decimal.Parse(rowGoods["realiz"].ToString());
+                        decimal OtgruzOptSum = decimal.Parse(rowGoods["realiz_opt"].ToString());
+                        decimal VozvrKassSum = decimal.Parse(rowGoods["vozvkass"].ToString());
+                        //Тут сохраняем тело
+
+                        if (id_otdel != 6)
+                            dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+                        else
+                            dtResult = sqlVVO.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+
+
+                        decimal RestStartSum = 0;
+                        decimal RestStopSum = 0;
+                        decimal Prihod = 0;
+                        decimal Otgruz = 0;
+                        decimal Vozvr = 0;
+                        decimal Spis = 0;
+                        decimal VozvrKass = 0;
+                        decimal Realiz = 0;
+                        decimal InventSpis = 0;
+                        decimal OtgruzOpt = 0;
+
+                        if (dtResult != null && dtResult.Rows.Count > 0)
+                        {
+                            RestStartSum = (decimal)dtResult.Rows[0]["RestStartSum"];
+                            RestStopSum = (decimal)dtResult.Rows[0]["RestStopSum"];
+                            Prihod = (decimal)dtResult.Rows[0]["Prihod"];
+                            Otgruz = (decimal)dtResult.Rows[0]["Otgruz"];
+                            Vozvr = (decimal)dtResult.Rows[0]["Vozvr"];
+                            Spis = (decimal)dtResult.Rows[0]["Spis"];
+                            VozvrKass = (decimal)dtResult.Rows[0]["VozvrKass"];
+                            Realiz = (decimal)dtResult.Rows[0]["Realiz"];
+                            InventSpis = (decimal)dtResult.Rows[0]["InventSpis"];
+                            OtgruzOpt = (decimal)dtResult.Rows[0]["OtgruzOpt"];
+                        }
+
+                        dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, false);
+
+                    }
+                }
+                MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Config.DoOnUIThread(() =>
+                {
+                    SetControlsEnable(true);
+                    //btSave.Enabled = true;
+                }, this);
                 return true;
             });
-
-            btSave.Enabled = true;
         }
 
         private void chkRemains_CheckedChanged(object sender, EventArgs e)

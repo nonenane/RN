@@ -74,6 +74,7 @@
             this.cmbGrp1 = new System.Windows.Forms.ComboBox();
             this.tbEan = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -323,6 +324,7 @@
             this.btPrint.Size = new System.Drawing.Size(48, 48);
             this.btPrint.TabIndex = 6;
             this.btPrint.UseVisualStyleBackColor = true;
+            this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // groupBox2
             // 
@@ -419,11 +421,22 @@
             this.tbName.TabIndex = 29;
             this.tbName.TextChanged += new System.EventHandler(this.tbEan_TextChanged);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(572, 23);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(281, 24);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 30;
+            this.progressBar1.Visible = false;
+            // 
             // frmRnCompareTovar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1313, 601);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.tbEan);
             this.Controls.Add(this.groupBox1);
@@ -483,5 +496,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cRealizGlob;
         private System.Windows.Forms.DataGridViewTextBoxColumn cRN;
         private System.Windows.Forms.DataGridViewTextBoxColumn cRnPrc;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
