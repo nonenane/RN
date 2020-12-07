@@ -171,6 +171,11 @@ namespace NewRn
 
                 decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
 
+                if (!Config.isInventSpis)
+                    prihod = prihod - Convert.ToDecimal(goodsRow["spis_inv"]);
+                
+
+
                 DataRow rnRow = rn.NewRow();
                 rnRow["id"] = id_tovar;
                 rnRow["ean"] = goodsRow["ean"];
@@ -292,6 +297,9 @@ namespace NewRn
                 DataRow[] remFinish = rems2.Select("id_tovar = '" + id_tovar.ToString() + "'");
 
                 decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
+
+                if (!Config.isInventSpis)
+                    prihod = prihod - Convert.ToDecimal(goodsRow["spis_inv"]);
 
                 DataRow rnRow = rn.NewRow();
                 rnRow["id"] = id_tovar;
