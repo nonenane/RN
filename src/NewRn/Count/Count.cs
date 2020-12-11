@@ -169,12 +169,10 @@ namespace NewRn
                 DataRow[] remStart = rems1.Select("id_tovar = '" + id_tovar.ToString() + "'");
                 DataRow[] remFinish = rems2.Select("id_tovar = '" + id_tovar.ToString() + "'");
 
-                decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
-
                 if (!Config.isInventSpis)
                     prihod = prihod - Convert.ToDecimal(goodsRow["spis_inv"]);
-                
 
+                decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
 
                 DataRow rnRow = rn.NewRow();
                 rnRow["id"] = id_tovar;
@@ -296,10 +294,12 @@ namespace NewRn
                 DataRow[] remStart = rems1.Select("id_tovar = '" + id_tovar.ToString() + "'");
                 DataRow[] remFinish = rems2.Select("id_tovar = '" + id_tovar.ToString() + "'");
 
-                decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
-
                 if (!Config.isInventSpis)
                     prihod = prihod - Convert.ToDecimal(goodsRow["spis_inv"]);
+
+                decimal RN = realiz - (Convert.ToDecimal(remStart[0]["remains"]) + prihod - Convert.ToDecimal(remFinish[0]["remains"]));
+
+               
 
                 DataRow rnRow = rn.NewRow();
                 rnRow["id"] = id_tovar;

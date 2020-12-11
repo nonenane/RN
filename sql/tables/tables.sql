@@ -26,7 +26,6 @@ GO
 
 
 
-
 CREATE TABLE [CountRN].[j_SaveRN](
 	[id] [int] IDENTITY(1,1) NOT NULL,	
 	[id_tSaveRN] int not null,
@@ -54,6 +53,8 @@ CREATE TABLE [CountRN].[j_SaveRN](
 	[OtgruzOptSum] [numeric](16, 2) NOT NULL,
 	[VozvrKass] [numeric](16, 2) NOT NULL,
 	[VozvrKassSum] [numeric](16, 2) NOT NULL,
+	[PrihodAll] [numeric](16, 2) NOT NULL,
+	[RealizAll] [numeric](16, 2) NOT NULL,
  CONSTRAINT [PK_j_SaveRN] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

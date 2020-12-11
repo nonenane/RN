@@ -501,6 +501,17 @@ namespace NewRn.Data
                 new DbType[3] { DbType.Int32, DbType.Date, DbType.Date }, ap);
         }
 
+        public DataTable getTovarDataToSaveRN(DateTime dateStart, DateTime dateStop)
+        {
+            ap.Clear();
+
+            ap.Add(dateStart);
+            ap.Add(dateStop);
+            return sql.executeProcedure("CountRN.spg_getTovarDataToSaveRN_new",
+                new string[2] { "@dateStart", "@dateStop" },
+                new DbType[2] { DbType.Date, DbType.Date }, ap);
+        }
+
         public DataTable setTSaveRN(DateTime DateStart, DateTime DateEnd,bool isOptOtgruz,bool isOnlyShipped,bool isInventorySpis,decimal TotalPrihod, decimal TotalRealiz, decimal TotalRestStart, decimal TotalRestStop, decimal TotalRN, decimal TotalPercentRN)
         {
 
@@ -540,7 +551,7 @@ namespace NewRn.Data
                new DbType[5] { DbType.Date, DbType.Date, DbType.Boolean, DbType.Boolean, DbType.Boolean }, ap);
         }
 
-        public DataTable setSaveRN(int id_tSaveRN,int  id_tovar,int  id_department,int  id_grp1,int  id_grp2, decimal RestStart, decimal RestStartSum, decimal RestStop, decimal RestStopSum, decimal Prihod, decimal PrihodSum, decimal Otgruz, decimal OtgruzSum, decimal Vozvr, decimal VozvrSum, decimal Spis, decimal SpisSum, decimal InventSpis, decimal InventSpisSum, decimal Realiz, decimal RealizSum, decimal OtgruzOpt, decimal OtgruzOptSum, decimal VozvrKass, decimal VozvrKassSum,bool isDel)
+        public DataTable setSaveRN(int id_tSaveRN,int  id_tovar,int  id_department,int  id_grp1,int  id_grp2, decimal RestStart, decimal RestStartSum, decimal RestStop, decimal RestStopSum, decimal Prihod, decimal PrihodSum, decimal Otgruz, decimal OtgruzSum, decimal Vozvr, decimal VozvrSum, decimal Spis, decimal SpisSum, decimal InventSpis, decimal InventSpisSum, decimal Realiz, decimal RealizSum, decimal OtgruzOpt, decimal OtgruzOptSum, decimal VozvrKass, decimal VozvrKassSum,decimal PrihodAll,decimal RealizAll, bool isDel)
         {
 
             ap.Clear();
@@ -570,11 +581,13 @@ namespace NewRn.Data
             ap.Add(OtgruzOptSum);
             ap.Add(VozvrKass);
             ap.Add(VozvrKassSum);
+            ap.Add(PrihodAll);
+            ap.Add(RealizAll);
             ap.Add(isDel);
 
             return sql.executeProcedure("CountRN.spg_setSaveRN",
-               new string[26] { "@id_tSaveRN", "@id_tovar", "@id_department", "@id_grp1", "@id_grp2", "@RestStart", "@RestStartSum", "@RestStop", "@RestStopSum", "@Prihod", "@PrihodSum", "@Otgruz", "@OtgruzSum", "@Vozvr", "@VozvrSum", "@Spis", "@SpisSum", "@InventSpis", "@InventSpisSum", "@Realiz", "@RealizSum", "@OtgruzOpt", "@OtgruzOptSum", "@VozvrKass", "@VozvrKassSum", "@isDel" },
-               new DbType[26] { DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Boolean }, ap);
+               new string[28] { "@id_tSaveRN", "@id_tovar", "@id_department", "@id_grp1", "@id_grp2", "@RestStart", "@RestStartSum", "@RestStop", "@RestStopSum", "@Prihod", "@PrihodSum", "@Otgruz", "@OtgruzSum", "@Vozvr", "@VozvrSum", "@Spis", "@SpisSum", "@InventSpis", "@InventSpisSum", "@Realiz", "@RealizSum", "@OtgruzOpt", "@OtgruzOptSum", "@VozvrKass", "@VozvrKassSum", "@PrihodAll", "@RealizAll", "@isDel" },
+               new DbType[28] { DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Decimal, DbType.Boolean }, ap);
         }
 
 

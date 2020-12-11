@@ -34,6 +34,8 @@ ALTER PROCEDURE [CountRN].[spg_setSaveRN]
 	@OtgruzOpt numeric(16,2),
 	@VozvrKassSum numeric(16,2),
 	@VozvrKass numeric(16,2),
+	@PrihodAll numeric(16,2),
+	@RealizAll numeric(16,2),
 	@isDel bit
 AS
 BEGIN
@@ -82,7 +84,9 @@ BEGIN TRY
 								OtgruzOptSum = @OtgruzOptSum,
 								OtgruzOpt = @OtgruzOpt,
 								VozvrKassSum = @VozvrKassSum,
-								VozvrKass = VozvrKass
+								VozvrKass = VozvrKass,
+								PrihodAll = @PrihodAll,
+								RealizAll = @RealizAll
 							WHERE 					
 								id = @id
 
@@ -90,8 +94,8 @@ BEGIN TRY
 						END
 					ELSE
 						BEGIN
-							INSERT INTO CountRN.j_SaveRN (id_tSaveRN,id_tovar,id_department,id_grp1,id_grp2,RestStart,RestStartSum,RestStop,RestStopSum,Prihod,PrihodSum,Otgruz,OtgruzSum,Vozvr,VozvrSum,Spis,SpisSum,InventSpis,InventSpisSum,Realiz,RealizSum,OtgruzOpt,OtgruzOptSum,VozvrKass,VozvrKassSum)
-							VALUES (@id_tSaveRN,@id_tovar,@id_department,@id_grp1,@id_grp2,@RestStart,@RestStartSum,@RestStop,@RestStopSum,@Prihod,@PrihodSum,@Otgruz,@OtgruzSum,@Vozvr,@VozvrSum,@Spis,@SpisSum,@InventSpis,@InventSpisSum,@Realiz,@RealizSum,@OtgruzOpt,@OtgruzOptSum,@VozvrKass,@VozvrKassSum)				
+							INSERT INTO CountRN.j_SaveRN (id_tSaveRN,id_tovar,id_department,id_grp1,id_grp2,RestStart,RestStartSum,RestStop,RestStopSum,Prihod,PrihodSum,Otgruz,OtgruzSum,Vozvr,VozvrSum,Spis,SpisSum,InventSpis,InventSpisSum,Realiz,RealizSum,OtgruzOpt,OtgruzOptSum,VozvrKass,VozvrKassSum,PrihodAll,RealizAll)
+							VALUES (@id_tSaveRN,@id_tovar,@id_department,@id_grp1,@id_grp2,@RestStart,@RestStartSum,@RestStop,@RestStopSum,@Prihod,@PrihodSum,@Otgruz,@OtgruzSum,@Vozvr,@VozvrSum,@Spis,@SpisSum,@InventSpis,@InventSpisSum,@Realiz,@RealizSum,@OtgruzOpt,@OtgruzOptSum,@VozvrKass,@VozvrKassSum,@PrihodAll,@RealizAll)				
 
 							SELECT cast(SCOPE_IDENTITY() as int) as id
 						END

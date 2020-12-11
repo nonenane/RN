@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -95,6 +96,9 @@ namespace NewRn
                     {
                         dtData.Columns.Add(new DataColumn("isError", typeof(bool)) { DefaultValue = false });
                     }
+                    
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
 
                     foreach (DataRow row in dtData.Copy().Rows)
                     {
@@ -150,9 +154,17 @@ namespace NewRn
                         //{
                         //    countResult = store.CountRN_inv(sql, sqlVVO, Convert.ToDateTime(parameters[0]), Convert.ToDateTime(parameters[1]), Convert.ToBoolean(parameters[2]), Convert.ToBoolean(parameters[3]));
                         //}
+
+                        //break;
                     }
                     dtData.DefaultView.Sort = "id asc";
                     dtData = dtData.DefaultView.ToTable().Copy();
+                    TimeSpan ts = stopWatch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                    Console.WriteLine($"Время рассчёта:{ elapsedTime}");
+
 
                     Config.DoOnUIThread(() =>
                     {

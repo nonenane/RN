@@ -6,6 +6,7 @@ using System.Data;
 using System.Collections;
 using NewRn.Data;
 using Nwuram.Framework.Settings.Connection;
+using System.Diagnostics;
 
 namespace NewRn
 {
@@ -810,6 +811,8 @@ namespace NewRn
 
         public void CountRN(int id, DateTime dateStart, DateTime dateFinish, DataTable prihodStart, DataTable prihodFinish, bool withOptOtgruz, bool shipped, IDataWorker dataWorker)
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             this.dataWorker = dataWorker;
             //получить товары по отделу за период
             DataTable goods = dataWorker.GetTovars(this.id, dateStart, dateFinish, withOptOtgruz, shipped);
@@ -817,13 +820,19 @@ namespace NewRn
             DataTable prihodStart1 = dataWorker.GetPrihod(dateStart.AddSeconds(-1), dateStart.AddSeconds(0), this.id);
             //приходы на конец
             DataTable prihodFinish1 = dataWorker.GetPrihod(dateFinish.AddDays(1).AddSeconds(-1), dateFinish.AddDays(1).AddSeconds(-1), this.id);
-            
+
             //получить остатки на начало
             DataTable rems1 = Count.CountRemains(goods, prihodStart1, "kol1", dataWorker, dateStart);
             //получить остатки на конец
             DataTable rems2 = Count.CountRemains(goods, prihodFinish1, "kol2", dataWorker, dateFinish.AddDays(1));
             //посчитать РН по отделу
             rn = Count.CountRN(goods, rems1, rems2, this.id);
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            Console.WriteLine($"Dep:{this.id}  RunTime:{ elapsedTime}");
         }
 
         public void CountRN_inv(int id, DateTime dateStart, DateTime dateFinish, DataTable prihodStart, DataTable prihodFinish, bool withOptOtgruz, bool shipped, IDataWorker dataWorker)

@@ -1491,7 +1491,7 @@ namespace NewRn
                         return false;
                     }
 
-                    dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
+                    dtResult = sql.setSaveRN(id_TSaveRN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
                 }
 
                 dtResult = sql.setTSaveRN(DateStart, DateEnd, isOptOtgruz, isOnlyShipped, isInventorySpis, TotalPrihod, TotalRealiz, TotalRestStart, TotalRestStop, TotalRN, TotalPercentRN);
@@ -1510,6 +1510,19 @@ namespace NewRn
                 id_TSaveRN = (int)dtResult.Rows[0]["id"];
 
                 DataTable dtDeps = sql.getDepartments(true);
+
+
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                DataTable dtCombo = null;
+
+                dtResult = sql.getTovarDataToSaveRN(DateStart, DateEnd);
+                if (dtResult != null && dtResult.Rows.Count > 0) dtCombo = dtResult.Copy();
+
+                dtResult = sqlVVO.getTovarDataToSaveRN(DateStart, DateEnd);
+                if (dtResult != null && dtResult.Rows.Count > 0)
+                    if (dtCombo != null) dtCombo.Merge(dtResult); else dtCombo = dtResult.Copy();
 
                 //foreach (DataRow row in (cmbDepartments.DataSource as DataTable).Rows)
                 foreach (DataRow row in dtDeps.Rows)
@@ -1535,12 +1548,16 @@ namespace NewRn
                         decimal RealizSum = decimal.Parse(rowGoods["realiz"].ToString());
                         decimal OtgruzOptSum = decimal.Parse(rowGoods["realiz_opt"].ToString());
                         decimal VozvrKassSum = decimal.Parse(rowGoods["vozvkass"].ToString());
+                        decimal PrihodAll = Convert.ToDecimal(rowGoods["prihod_all"]);
+                        decimal RealizAll = Convert.ToDecimal(rowGoods["realiz_all"]);
                         //Тут сохраняем тело
 
-                        if (id_otdel != 6)
+
+                        /*if (id_otdel != 6)
                             dtResult = sql.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
                         else
                             dtResult = sqlVVO.getTovarDataToSaveRN(id_tovar, DateStart, DateEnd);
+                        */
 
 
                         decimal RestStartSum = 0;
@@ -1554,24 +1571,40 @@ namespace NewRn
                         decimal InventSpis = 0;
                         decimal OtgruzOpt = 0;
 
-                        if (dtResult != null && dtResult.Rows.Count > 0)
+                        if (dtCombo != null && dtCombo.Rows.Count > 0)
                         {
-                            RestStartSum = (decimal)dtResult.Rows[0]["RestStartSum"];
-                            RestStopSum = (decimal)dtResult.Rows[0]["RestStopSum"];
-                            Prihod = (decimal)dtResult.Rows[0]["Prihod"];
-                            Otgruz = (decimal)dtResult.Rows[0]["Otgruz"];
-                            Vozvr = (decimal)dtResult.Rows[0]["Vozvr"];
-                            Spis = (decimal)dtResult.Rows[0]["Spis"];
-                            VozvrKass = (decimal)dtResult.Rows[0]["VozvrKass"];
-                            Realiz = (decimal)dtResult.Rows[0]["Realiz"];
-                            InventSpis = (decimal)dtResult.Rows[0]["InventSpis"];
-                            OtgruzOpt = (decimal)dtResult.Rows[0]["OtgruzOpt"];
+
+                            EnumerableRowCollection<DataRow> rowCollect = dtCombo.AsEnumerable().Where(r => r.Field<int>("id_tovar") == id_tovar);
+
+                            if (rowCollect.Count() > 0)
+                            {
+                                DataRow viewRow = rowCollect.First();
+
+                                RestStartSum = (decimal)viewRow["RestStartSum"];
+                                RestStopSum = (decimal)viewRow["RestStopSum"];
+                                Prihod = (decimal)viewRow["Prihod"];
+                                Otgruz = (decimal)viewRow["Otgruz"];
+                                Vozvr = (decimal)viewRow["Vozvr"];
+                                Spis = (decimal)viewRow["Spis"];
+                                VozvrKass = (decimal)viewRow["VozvrKass"];
+                                Realiz = (decimal)viewRow["Realiz"];
+                                InventSpis = (decimal)viewRow["InventSpis"];
+                                OtgruzOpt = (decimal)viewRow["OtgruzOpt"];
+                            }
                         }
 
-                        dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, false);
+                        dtResult = sql.setSaveRN(id_TSaveRN, id_tovar, id_otdel, id_grp1, id_grp2, RestStart, RestStartSum, RestStop, RestStopSum, Prihod, PrihodSum, Otgruz, OtgruzSum, Vozvr, VozvrSum, Spis, SpisSum, InventSpis, InventSpisSum, Realiz, RealizSum, OtgruzOpt, OtgruzOptSum, VozvrKass, VozvrKassSum, PrihodAll, RealizAll, false);
 
                     }
                 }
+
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+                Console.WriteLine($"RunTime:{ elapsedTime}");
+
                 MessageBox.Show("Данные сохранены", "Сохранить данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Config.DoOnUIThread(() =>
                 {

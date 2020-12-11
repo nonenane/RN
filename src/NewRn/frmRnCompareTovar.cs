@@ -77,7 +77,7 @@ namespace NewRn
                 }
                 catch (Exception ex) { }
 
-                dtData = dtTovarCalculation.Copy();
+                dtData = dtTovarCalculation.Clone();
                 if (!dtData.Columns.Contains("nameType"))
                 {
                     dtData.Columns.Add(new DataColumn("nameType", typeof(string)) { DefaultValue = "рассчитанные" });
@@ -100,6 +100,211 @@ namespace NewRn
 
                 if (dtRN != null && dtRN.Rows.Count > 0 && dtData != null && dtTovarCalculation.Rows.Count > 0)
                 {
+
+                    #region "NEW"
+                    try
+                    {
+                        DataTable dtTmp = dtData.Clone();
+
+                        if (dtTovarCalculation.Columns["id"].DataType == typeof(int))
+                        {
+                            var query = from g in dtTovarCalculation.AsEnumerable()
+                                        join k in dtRN.AsEnumerable() on new { Q = g.Field<int>("id"), Z = g.Field<int>("id_otdel") } equals new { Q = k.Field<int>("id_tovar"), Z = k.Field<int>("id_department") }
+                                        select dtTmp.LoadDataRow(new object[]
+                                                                       {
+
+                                                                    g.Field<string>("ean"),
+                                                                    g.Field<string>("cname"),//cname
+                                                                    k.Field<decimal>("PrihodSum") - k.Field<decimal>("OtgruzSum") - k.Field<decimal>("VozvrSum") -k.Field<decimal>("SpisSum") - k.Field<decimal>("VozvrKassSum") + k.Field<decimal>("InventSpisSum"),//prihod_all
+                                                                    k.Field<decimal>("PrihodSum"),//prihod
+                                                                    k.Field<decimal>("OtgruzSum"),//otgruz
+                                                                    k.Field<decimal>("VozvrSum"),//vozvr
+                                                                    k.Field<decimal>("SpisSum"),//spis
+                                                                    k.Field<decimal>("InventSpisSum"),//spis_inv
+                                                                    k.Field<decimal>("RealizSum") - k.Field<decimal>("OtgruzOptSum"),//realiz_all
+                                                                    k.Field<decimal>("RealizSum"),//realiz
+                                                                    k.Field<decimal>("OtgruzOptSum"),//realiz_opt
+                                                                    k.Field<decimal>("VozvrKassSum"),//vozvkass
+                                                                    //k.Field<decimal>("RealizSum") -  k.Field<decimal>("PrihodSum") - k.Field<decimal>("RestStart") + k.Field<decimal>("RestStop"),//rn                                                                    
+                                                                     k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")),//rn
+                                                                    k.Field<decimal>("RestStart"),//r1
+                                                                    k.Field<decimal>("RestStop"),//r2        
+                                                                    g.Field<bool>("notValidate"),//notValidate
+                                                                    g.Field<string>("id_grp1"),//id_grp1
+                                                                    g.Field<string>("id_grp2"),//id_grp2
+                                                                    g.Field<int>("id_otdel"),//id_otdel
+                                                                    g.Field<int>("id"),
+                                                                     (k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")) == 0 || k.Field<decimal>("RealizAll") == 0)?(decimal)0:Math.Round((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) / (k.Field<decimal>("RealizAll")) * 100, 2),//procent  
+                                                                    //(k.Field<decimal>("RealizSum") - k.Field<decimal>("PrihodSum") - k.Field<decimal>("RestStart") + k.Field<decimal>("RestStop") == 0 || k.Field<decimal>("RealizSum") - k.Field<decimal>("OtgruzOptSum") == 0)?(decimal)0:Math.Round((k.Field<decimal>("RealizSum") - k.Field<decimal>("PrihodSum") - k.Field<decimal>("RestStart") + k.Field<decimal>("RestStop")) / (k.Field<decimal>("RealizSum") - k.Field<decimal>("VozvrKassSum")) * 100, 2),//procent                                                                    
+                                                                    "сохраненные",//nameType
+                                                                    2,//idType
+                                                                    //false,//isError
+                                                                    (
+                                    decimal.ToDouble(k.Field<decimal>("RestStart")) != g.Field<double>("r1") ||
+                                    decimal.ToDouble(k.Field<decimal>("RestStop")) != g.Field<double>("r2") ||
+                                    decimal.ToDouble(k.Field<decimal>("PrihodSum")) != g.Field<double>("prihod") ||
+                                    decimal.ToDouble(k.Field<decimal>("OtgruzSum")) != g.Field<double>("otgruz") ||
+                                    decimal.ToDouble(k.Field<decimal>("VozvrSum")) != g.Field<double>("vozvr") ||
+                                    decimal.ToDouble(k.Field<decimal>("SpisSum")) != g.Field<double>("spis") ||
+                                    decimal.ToDouble(k.Field<decimal>("InventSpisSum")) != g.Field<double>("spis_inv") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizSum")) != g.Field<double>("realiz") ||
+                                    decimal.ToDouble(k.Field<decimal>("OtgruzOptSum")) != g.Field<double>("realiz_opt") ||
+                                    decimal.ToDouble(k.Field<decimal>("VozvrKassSum")) != g.Field<double>("vozvkass") ||
+                                    decimal.ToDouble(k.Field<decimal>("PrihodAll")) != g.Field<double>("prihod_all") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizAll")) != g.Field<double>("realiz_all") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) != g.Field<double>("rn") ||
+                                    ((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")) == 0 || k.Field<decimal>("RealizAll") == 0)
+                                    ?(decimal)0 :
+                                       Math.Round((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) / (k.Field<decimal>("RealizAll")) * 100, 2))
+                                        != g.Field<decimal>("procent")
+                                    //((k.Field<decimal>("RealizSum") - k.Field<decimal>("PrihodSum") - k.Field<decimal>("RestStart") + k.Field<decimal>("RestStop") == 0 || k.Field<decimal>("RealizSum") - k.Field<decimal>("OtgruzOptSum") == 0)
+                                    //?(decimal)0 :
+                                       //Math.Round((k.Field<decimal>("RealizSum") - k.Field<decimal>("PrihodSum") - k.Field<decimal>("RestStart") + k.Field<decimal>("RestStop")) / (k.Field<decimal>("RealizSum") - k.Field<decimal>("VozvrKassSum")) * 100, 2))
+                                        //!= g.Field<decimal>("procent")
+
+                                    )?true:false,//isError
+                        }, false);
+
+
+                            DataTable dtDataNewGoods = query.CopyToDataTable();
+                            dtData.Merge(dtDataNewGoods);
+                             
+                            query = from g in dtTovarCalculation.AsEnumerable()
+                                    join k in dtData.AsEnumerable() on new { Q = g.Field<int>("id"), Z = g.Field<int>("id_otdel") } equals new { Q = k.Field<int>("id"), Z = k.Field<int>("id_otdel") }
+                                    select dtTmp.LoadDataRow(new object[]
+                                                                   {
+
+                                                                    g.Field<string>("ean"),
+                                                                    g.Field<string>("cname"),//cname
+                                                                    g.Field<double>("prihod_all"),//prihod_all
+                                                                    g.Field<double>("prihod"),//prihod
+                                                                    g.Field<double>("otgruz"),//otgruz
+                                                                    g.Field<double>("vozvr"),//vozvr
+                                                                    g.Field<double>("spis"),//spis
+                                                                    g.Field<double>("spis_inv"),//spis_inv
+                                                                    g.Field<double>("realiz_all"),//realiz_all
+                                                                    g.Field<double>("realiz"),//realiz
+                                                                    g.Field<double>("realiz_opt"),//realiz_opt
+                                                                    g.Field<double>("vozvkass"),//vozvkass
+                                                                    g.Field<double>("rn"),//rn                                                                    
+                                                                    g.Field<double>("r1"),//r1
+                                                                    g.Field<double>("r2"),//r2        
+                                                                    g.Field<bool>("notValidate"),//notValidate
+                                                                    g.Field<string>("id_grp1"),//id_grp1
+                                                                    g.Field<string>("id_grp2"),//id_grp2
+                                                                    g.Field<int>("id_otdel"),//id_otdel
+                                                                    g.Field<int>("id"),
+                                                                    g.Field<decimal>("procent"),//procent                                                                    
+                                                                    "рассчитанные",//nameType
+                                                                    1,//idType
+                                                                    k.Field<bool>("isError"),//isError                                                                                                    
+                                                                   }, false);
+
+                            dtDataNewGoods = query.CopyToDataTable();
+                            dtData.Merge(dtDataNewGoods);
+                        }
+                        else
+                        {
+                            var query = from g in dtTovarCalculation.AsEnumerable()
+                                        join k in dtRN.AsEnumerable() on new { Q = int.Parse(g.Field<string>("id")), Z = g.Field<int>("id_otdel") } equals new { Q = k.Field<int>("id_tovar"), Z = k.Field<int>("id_department") }
+                                        select dtTmp.LoadDataRow(new object[]
+                                                                       {
+                                                                    g.Field<string>("id"),//id
+                                                                    g.Field<string>("ean"),//ean
+                                                                    g.Field<string>("cname"),//cname
+                                                                    k.Field<decimal>("PrihodSum") - k.Field<decimal>("OtgruzSum") - k.Field<decimal>("VozvrSum") -k.Field<decimal>("SpisSum") - k.Field<decimal>("VozvrKassSum") + k.Field<decimal>("InventSpisSum"),//prihod_all
+                                                                    k.Field<decimal>("PrihodSum"),//prihod
+                                                                    k.Field<decimal>("OtgruzSum"),//otgruz
+                                                                    k.Field<decimal>("VozvrSum"),//vozvr
+                                                                    k.Field<decimal>("SpisSum"),//spis
+                                                                    k.Field<decimal>("InventSpisSum"),//spis_inv
+                                                                    k.Field<decimal>("RealizSum") - k.Field<decimal>("OtgruzOptSum"),//realiz_all
+                                                                    k.Field<decimal>("RealizSum"),//realiz
+                                                                    k.Field<decimal>("OtgruzOptSum"),//realiz_opt
+                                                                    k.Field<decimal>("VozvrKassSum"),//vozvkass
+                                                                    k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")),//rn
+                                                                    g.Field<string>("id_grp1"),//id_grp1
+                                                                    g.Field<string>("id_grp2"),//id_grp2
+                                                                    k.Field<decimal>("RestStart"),//r1
+                                                                    k.Field<decimal>("RestStop"),//r2                                                                  
+                                                                    (k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")) == 0 || k.Field<decimal>("RealizAll") == 0)?(decimal)0:Math.Round((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) / (k.Field<decimal>("RealizAll")) * 100, 2),//procent                                                                    
+                                                                    g.Field<int>("id_otdel"),//id_otdel
+                                                                    g.Field<bool>("notValidate"),//notValidate
+                                                                    "сохраненные",//nameType
+                                                                    2,//idType
+                                                                    //false,//isError
+                                                                    (
+                                    decimal.ToDouble(k.Field<decimal>("RestStart")) != g.Field<double>("r1") ||
+                                    decimal.ToDouble(k.Field<decimal>("RestStop")) != g.Field<double>("r2") ||
+                                    decimal.ToDouble(k.Field<decimal>("PrihodSum")) != g.Field<double>("prihod") ||
+                                    decimal.ToDouble(k.Field<decimal>("OtgruzSum")) != g.Field<double>("otgruz") ||
+                                    decimal.ToDouble(k.Field<decimal>("VozvrSum")) != g.Field<double>("vozvr") ||
+                                    decimal.ToDouble(k.Field<decimal>("SpisSum")) != g.Field<double>("spis") ||
+                                    decimal.ToDouble(k.Field<decimal>("InventSpisSum")) != g.Field<double>("spis_inv") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizSum")) != g.Field<double>("realiz") ||
+                                    decimal.ToDouble(k.Field<decimal>("OtgruzOptSum")) != g.Field<double>("realiz_opt") ||
+                                    decimal.ToDouble(k.Field<decimal>("VozvrKassSum")) != g.Field<double>("vozvkass") ||
+                                    decimal.ToDouble(k.Field<decimal>("PrihodAll")) != g.Field<double>("prihod_all") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizAll")) != g.Field<double>("realiz_all") ||
+                                    decimal.ToDouble(k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) != g.Field<double>("rn") ||
+                                    ((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop")) == 0 || k.Field<decimal>("RealizAll") == 0)
+                                    ?(double)0 : 
+                                        decimal.ToDouble(Math.Round((k.Field<decimal>("RealizAll") -  (k.Field<decimal>("RestStart") + k.Field<decimal>("PrihodAll") - k.Field<decimal>("RestStop"))) / (k.Field<decimal>("RealizAll")) * 100, 2)))
+                                        != g.Field<double>("procent")
+                                    )?true:false,//isError
+                        }, false);
+
+
+                            DataTable dtDataNewGoods = query.CopyToDataTable();
+                            dtData.Merge(dtDataNewGoods);
+
+
+                            query = from g in dtTovarCalculation.AsEnumerable()
+                                    join k in dtData.AsEnumerable() on new { Q = int.Parse(g.Field<string>("id")), Z = g.Field<int>("id_otdel") } equals new { Q = int.Parse(k.Field<string>("id")), Z = k.Field<int>("id_otdel") }
+                                    select dtTmp.LoadDataRow(new object[]
+                                                                   {
+                                                                    g.Field<string>("id"),//id
+                                                                    g.Field<string>("ean"),//ean
+                                                                    g.Field<string>("cname"),//cname
+                                                                    g.Field<double>("prihod_all"),//prihod_all
+                                                                    g.Field<double>("prihod"),//prihod
+                                                                    g.Field<double>("otgruz"),//otgruz
+                                                                    g.Field<double>("vozvr"),//vozvr
+                                                                    g.Field<double>("spis"),//spis
+                                                                    g.Field<double>("spis_inv"),//spis_inv
+                                                                    g.Field<double>("realiz_all"),//realiz_all
+                                                                    g.Field<double>("realiz"),//realiz
+                                                                    g.Field<double>("realiz_opt"),//realiz_opt
+                                                                    g.Field<double>("vozvkass"),//vozvkass
+                                                                    g.Field<double>("rn"),//rn
+                                                                    g.Field<string>("id_grp1"),//id_grp1
+                                                                    g.Field<string>("id_grp2"),//id_grp2
+                                                                    g.Field<double>("r1"),//r1
+                                                                    g.Field<double>("r2"),//r2                                                                  
+                                                                    g.Field<double>("procent"),//procent                                                                    
+                                                                    g.Field<int>("id_otdel"),//id_otdel
+                                                                    g.Field<bool>("notValidate"),//notValidate
+                                                                    "рассчитанные",//nameType
+                                                                    1,//idType
+                                                                    k.Field<bool>("isError"),//isError                                                                   
+                                                                   }, false);
+
+
+                            dtDataNewGoods = query.CopyToDataTable();
+                            dtData.Merge(dtDataNewGoods);
+
+                        }
+
+                    }catch(Exception ex)
+                    { 
+                    
+                    }
+                      
+
+
+                    #endregion
+
+                    /*
                     foreach (DataRow row in dtTovarCalculation.Rows)
                     {
                         try
@@ -216,7 +421,7 @@ namespace NewRn
 
                         }
                     }
-
+                    */
                     /*
                     int id_tovar = int.Parse(rowGoods["id"].ToString());
                     int id_grp1 = int.Parse(rowGoods["id_grp1"].ToString());

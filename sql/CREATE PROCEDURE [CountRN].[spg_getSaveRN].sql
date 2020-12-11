@@ -7,7 +7,7 @@ GO
 -- Create date: 2020-08-28
 -- Description:	Получение расчитанных данных по РН
 -- =============================================
-CREATE PROCEDURE [CountRN].[spg_getSaveRN]		 
+ALTER PROCEDURE [CountRN].[spg_getSaveRN]		 
 	@id_tSaveRN int
 AS
 BEGIN
@@ -41,6 +41,8 @@ BEGIN
       ,[OtgruzOptSum]
       ,[VozvrKass]
       ,[VozvrKassSum] 
+	  ,[PrihodAll]
+	  ,[RealizAll]
 	from 
 		CountRN.j_SaveRN t 
 	where 
